@@ -11,7 +11,7 @@ npm run dev
 
 ## Deploy
 
-See **[docs/HOSTINGER.md](docs/HOSTINGER.md)** for FTP secrets, subdomain paths, and linked project repositories.
+See **[docs/DEPLOY-NOW.md](docs/DEPLOY-NOW.md)** if the Hostinger placeholder page is showing, or **[docs/HOSTINGER.md](docs/HOSTINGER.md)** for FTP secrets and DNS.
 
 Quick path: push to `main` after GitHub Actions secrets are set; the workflow builds and uploads `dist/`.
 

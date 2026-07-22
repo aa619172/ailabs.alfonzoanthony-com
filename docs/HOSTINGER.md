@@ -8,7 +8,7 @@ If **Settings → Pages** is set to **Deploy from a branch → main / (root)**, 
 
 1. **Settings → Pages → Build and deployment → Source:** choose **GitHub Actions** (not “Deploy from a branch”).
 2. Push to **`main`** runs `.github/workflows/deploy-github-pages.yml` (build + deploy artifact).
-3. **Custom domain (optional):** in Pages settings, set **ailabs.alfonzoanthony.com**. `public/CNAME` is included in the build. In **Hostinger DNS**, add the records GitHub shows (usually `CNAME` → `aa619172.github.io` or the four `A` records) — remove conflicting Hostinger “park subdomain” records for the same name.
+3. **Custom domain (GitHub Pages only):** in Pages settings, enter **only** `ailabs.alfonzoanthony.com` — never a file path. In **Hostinger DNS**, point the subdomain to GitHub (CNAME → `aa619172.github.io` or GitHub’s A records). If DNS stays on Hostinger, **leave GitHub custom domain blank** (see [DEPLOY-NOW.md](./DEPLOY-NOW.md)).
 4. After the custom domain is active, set repository **Variable** `GITHUB_PAGES_BASE` to `/` (**Settings → Secrets and variables → Actions → Variables**) so asset paths match the subdomain URL. Until then, the default base path targets `https://aa619172.github.io/ailabs.alfonzoanthony-com/`.
 
 **Do not use GitHub Pages and Hostinger FTP on the same hostname** — pick one DNS target.
