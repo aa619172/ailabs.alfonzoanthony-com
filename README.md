@@ -1,25 +1,6 @@
-# Alfonzo Anthony — AI Labs Portfolio
+# Alfonzo Anthony — AI Portfolio
 
-Static portfolio for **https://ailabs.alfonzoanthony.com** — AI automation and software builds, deployed to Hostinger from this repo.
+Responsive AI Prompt Engineer / AI Automation portfolio with case studies for the 2TimesACharm AI Ad Engine, AI Video Generation Engine, Crusoe RipPro Studio, and Mockup Magic.
 
-## Develop
-
-```bash
-npm install
-npm run dev
-```
-
-## Deploy
-
-See **[docs/DEPLOY-NOW.md](docs/DEPLOY-NOW.md)** if the Hostinger placeholder page is showing, or **[docs/HOSTINGER.md](docs/HOSTINGER.md)** for FTP secrets and DNS.
-
-Quick path: push to `main` after GitHub Actions secrets are set; the workflow builds and uploads `dist/`.
-
-## Content
-
-- Copy and project links: `src/data/content.ts`
-- Resume PDF: `public/Alfonzo_Anthony_Resume.pdf`
-
-## Stack
-
-Vite, React, TypeScript, Tailwind CSS v4.
+## Deployment
+This version is a static portfolio. `npm run build` copies the site to `dist/` for the existing GitHub Pages and Hostinger workflows.
