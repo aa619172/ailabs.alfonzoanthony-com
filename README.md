@@ -8,3 +8,5 @@ This version is a static portfolio. `npm run build` copies the site to `dist/` f
 Hostinger deployment is configured to target the FTP account root (`./`) so the built site is uploaded directly to the live `public_html` directory rather than a nested `public_html/public_html` folder.
 
 Deployment trigger refreshed after updating the Hostinger FTP account credentials for the live `public_html` root.
+
+Deployment trigger refreshed again after updating the FTP password on 2026-08-22.
