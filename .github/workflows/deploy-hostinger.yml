@@ -11,8 +11,13 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    if: ${{ secrets.HOSTINGER_FTP_SERVER != '' }}
     runs-on: ubuntu-latest
+    env:
+      HOSTINGER_FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+      HOSTINGER_FTP_USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+      HOSTINGER_FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+      HOSTINGER_FTP_REMOTE_DIR: ${{ secrets.HOSTINGER_FTP_REMOTE_DIR }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,6 +28,18 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Validate Hostinger FTP settings
+        shell: bash
+        run: |
+          missing=0
+          for var in HOSTINGER_FTP_SERVER HOSTINGER_FTP_USERNAME HOSTINGER_FTP_PASSWORD HOSTINGER_FTP_REMOTE_DIR; do
+            if [ -z "${!var}" ]; then
+              echo "::error::Missing GitHub Actions secret: $var"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
       - name: Install and build
         run: |
           npm ci
@@ -31,9 +48,8 @@ jobs:
       - name: Deploy dist to Hostinger (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.HOSTINGER_FTP_SERVER }}
-          username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
-          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          server: ${{ env.HOSTINGER_FTP_SERVER }}
+          username: ${{ env.HOSTINGER_FTP_USERNAME }}
+          password: ${{ env.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ${{ secrets.HOSTINGER_FTP_REMOTE_DIR }}
-          dangerous-clean-slate: true
+          server-dir: ${{ env.HOSTINGER_FTP_REMOTE_DIR }}
