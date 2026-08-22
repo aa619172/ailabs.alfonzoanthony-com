@@ -39,6 +39,30 @@ jobs:
           done
           exit "$missing"
 
+      - name: Diagnose FTP login root
+        shell: bash
+        run: |
+          python - <<'PY'
+          import ftplib
+          import os
+
+          host = os.environ['HOSTINGER_FTP_SERVER'].strip()
+          if host.startswith('ftp://'):
+              host = host[6:]
+
+          ftp = ftplib.FTP()
+          ftp.connect(host, 21, timeout=20)
+          ftp.login(
+              os.environ['HOSTINGER_FTP_USERNAME'],
+              os.environ['HOSTINGER_FTP_PASSWORD'],
+          )
+          print('FTP working directory:', ftp.pwd())
+          print('FTP root entries:')
+          for entry in ftp.nlst():
+              print(' -', entry)
+          ftp.quit()
+          PY
+
       - name: Install and build
         run: |
           npm ci
