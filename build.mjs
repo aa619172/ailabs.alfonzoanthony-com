@@ -12,6 +12,7 @@ const files = [
   'case-study-rippro.html',
   'case-study-mockup-magic.html',
   'case-study-credit-rise.html',
+  'case-study-gpu-fleet-lab.html',
   'resume.html',
   'styles.css',
   'script.js'
@@ -23,7 +24,7 @@ for (const file of files) {
 
 await mkdir(`${out}/assets`, { recursive: true });
 
-// Copy repository-owned assets first (including Credit Rise).
+// Copy repository-owned assets first (including Credit Rise and GPU Fleet Lab).
 if (existsSync('assets')) {
   await cp('assets', `${out}/assets`, { recursive: true });
 }
