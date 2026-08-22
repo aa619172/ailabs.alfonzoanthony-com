@@ -10,3 +10,5 @@ Hostinger deployment is configured to target the FTP account root (`./`) so the 
 Deployment trigger refreshed after updating the Hostinger FTP account credentials for the live `public_html` root.
 
 Deployment trigger refreshed again after updating the FTP password on 2026-08-22.
+
+Deployment trigger refreshed after correcting `HOSTINGER_FTP_USERNAME` to the additional FTP account rooted at the live website directory.
