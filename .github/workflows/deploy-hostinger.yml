@@ -56,8 +56,14 @@ jobs:
               os.environ['HOSTINGER_FTP_USERNAME'],
               os.environ['HOSTINGER_FTP_PASSWORD'],
           )
-          print('FTP working directory:', ftp.pwd())
-          print('FTP root entries:')
+          print('FTP login directory:', ftp.pwd())
+          print('FTP login entries:')
+          for entry in ftp.nlst():
+              print(' -', entry)
+
+          ftp.cwd('..')
+          print('FTP parent directory:', ftp.pwd())
+          print('FTP parent entries:')
           for entry in ftp.nlst():
               print(' -', entry)
           ftp.quit()
@@ -75,4 +81,4 @@ jobs:
           username: ${{ env.HOSTINGER_FTP_USERNAME }}
           password: ${{ env.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ./
+          server-dir: ../
