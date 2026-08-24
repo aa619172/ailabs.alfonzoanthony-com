@@ -1,5 +1,6 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const out = 'dist';
 await rm(out, { recursive: true, force: true });
@@ -21,6 +22,20 @@ const files = [
 
 for (const file of files) {
   if (existsSync(file)) await cp(file, `${out}/${file}`);
+}
+
+// Embed ownership metadata in every deployed HTML document.
+for (const file of files.filter((name) => name.endsWith('.html'))) {
+  const target = `${out}/${file}`;
+  if (!existsSync(target)) continue;
+  let html = await readFile(target, 'utf8');
+  if (!html.includes('name="copyright"')) {
+    html = html.replace(
+      '</head>',
+      '<meta name="author" content="Alfonzo Anthony"><meta name="copyright" content="© 2026 Alfonzo Anthony. All rights reserved."><meta name="robots" content="index,follow,noimageindex"></head>'
+    );
+  }
+  await writeFile(target, html, 'utf8');
 }
 
 // Make newer portfolio projects part of the deployed HTML itself so their
@@ -84,4 +99,48 @@ if (resumeResponse.ok) {
   await writeFile(`${out}/Alfonzo_Anthony_AI_Prompt_Engineer_Resume_Public.pdf`, bytes);
 }
 
-console.log('Static AI portfolio copied to dist/');
+const sha256 = async (path) => {
+  if (!existsSync(path)) return null;
+  const bytes = await readFile(path);
+  return createHash('sha256').update(bytes).digest('hex');
+};
+
+const provenanceProjects = [
+  { id: 'AA-AILAB-2TAC-AE-001', title: '2TimesACharm AI Ad Engine', case_study: 'case-study-ad-engine.html', preview_asset: 'assets/2timesacharm-ad-engine.png' },
+  { id: 'AA-AILAB-VIDEO-002', title: 'AI Video Generation Engine', case_study: 'case-study-video-engine.html', preview_asset: 'assets/ai-video-engine.png' },
+  { id: 'AA-AILAB-RIPPRO-003', title: 'Crusoe RipPro Studio', case_study: 'case-study-rippro.html', preview_asset: 'assets/crusoe-rippro-studio.png' },
+  { id: 'AA-AILAB-MOCKUP-004', title: 'Mockup Magic', case_study: 'case-study-mockup-magic.html', preview_asset: 'assets/mockup-magic.png' },
+  { id: 'AA-AILAB-CREDIT-005', title: 'Credit Rise', case_study: 'case-study-credit-rise.html', preview_asset: 'assets/credit-rise-dashboard.svg' },
+  { id: 'AA-AILAB-GPU-006', title: 'GPU Fleet Lab', case_study: 'case-study-gpu-fleet-lab.html', preview_asset: 'assets/gpu-fleet-lab.svg' },
+  { id: 'AA-AILAB-PROMPT-007', title: 'Prompt Reliability Lab', case_study: 'case-study-prompt-reliability-lab.html', preview_asset: 'assets/prompt-reliability-lab.svg' }
+];
+
+const manifestProjects = [];
+for (const project of provenanceProjects) {
+  manifestProjects.push({
+    ...project,
+    canonical_url: `https://ailabs.alfonzoanthony.com/${project.case_study}`,
+    case_study_sha256: await sha256(`${out}/${project.case_study}`),
+    preview_asset_sha256: await sha256(`${out}/${project.preview_asset}`)
+  });
+}
+
+const provenanceManifest = {
+  schema_version: '1.0',
+  owner: 'Alfonzo Anthony',
+  portfolio_origin: 'https://ailabs.alfonzoanthony.com',
+  rights: '© 2026 Alfonzo Anthony. All rights reserved. Viewing does not grant permission to copy, reproduce, redistribute, commercialize, or misrepresent authorship.',
+  generated_at_utc: new Date().toISOString(),
+  repository_commit: process.env.GITHUB_SHA || null,
+  hash_algorithm: 'SHA-256',
+  purpose: 'Deployment provenance and integrity verification for original portfolio case studies and preview assets.',
+  projects: manifestProjects
+};
+
+await writeFile(
+  `${out}/provenance-manifest.json`,
+  JSON.stringify(provenanceManifest, null, 2),
+  'utf8'
+);
+
+console.log('Static AI portfolio copied to dist/ with provenance manifest');
