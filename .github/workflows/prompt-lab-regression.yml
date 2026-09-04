@@ -1,0 +1,55 @@
+name: Prompt Lab Regression Gate
+
+on:
+  pull_request:
+    paths:
+      - 'labs/ai-security-adversarial-testing/**'
+      - 'prompt-security-lab.*'
+      - 'case-study-ai-security-lab.html'
+      - '.github/workflows/prompt-lab-regression.yml'
+  push:
+    branches:
+      - main
+      - portfolio-hook-revamp-2026-09-04
+    paths:
+      - 'labs/ai-security-adversarial-testing/**'
+      - 'prompt-security-lab.*'
+      - 'case-study-ai-security-lab.html'
+      - '.github/workflows/prompt-lab-regression.yml'
+
+jobs:
+  prompt-regression:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: labs/ai-security-adversarial-testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run 12-test prompt regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Generate deterministic comparison report
+        run: python run_lab.py > prompt-regression-report.json
+
+      - name: Verify Phase 2 invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('prompt-regression-report.json').read_text())
+          assert report['before']['total_attacks'] == 12
+          assert report['before']['successful_attacks'] == 12
+          assert report['before']['risk_score'] == 84
+          assert report['after']['successful_attacks'] == 0
+          assert report['after']['risk_score'] == 0
+          assert len(report['version_history']) == 12
+          print('Prompt regression gate passed: V1 12/12 -> V2 0/12; risk 84 -> 0')
+          PY
