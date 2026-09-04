@@ -19,6 +19,8 @@ Viewing this portfolio does not grant permission to copy, reproduce, redistribut
 | Credit Rise | AA-AILAB-CREDIT-005 |
 | GPU Fleet Lab | AA-AILAB-GPU-006 |
 | Prompt Reliability Lab | AA-AILAB-PROMPT-007 |
+| Agent Orchestration Lab | AA-AILAB-AGENT-008 |
+| AI Security & Adversarial Testing Lab | AA-AILAB-SEC-009 |
 
 ## Deployment integrity
 
