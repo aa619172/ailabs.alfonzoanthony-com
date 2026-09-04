@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Adversarial Prompt Engineering Lab — Alfonzo Anthony</title>
+  <meta name="description" content="Interactive AI Prompt Engineering lab demonstrating prompt architecture, adversarial testing, evaluation, mitigation, and regression retesting.">
+  <link rel="canonical" href="https://ailabs.alfonzoanthony.com/prompt-security-lab.html">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="prompt-security-lab.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">Alfonzo Anthony / AI Labs</a>
+    <nav class="navlinks"><a href="index.html#work">Case Studies</a><a href="case-study-ai-security.html">Case Study</a><a class="btn ghost" href="resume.html">Resume</a></nav>
+  </div>
+</header>
+
+<main>
+<section class="lab-hero">
+  <div class="wrap lab-hero-grid">
+    <div>
+      <div class="eyebrow">AI PROMPT ENGINEERING · ADVERSARIAL EVALUATION</div>
+      <h1>Build the prompt. Attack the prompt. Improve the prompt.</h1>
+      <p class="lab-lead">This lab demonstrates how I engineer prompt systems by defining instruction hierarchy, context boundaries, tool permissions, output constraints, evaluator rubrics, adversarial tests, and regression checks.</p>
+      <div class="lab-scope">Controlled deterministic simulation · synthetic secrets · no third-party targets</div>
+    </div>
+    <div class="headline-metrics">
+      <div><strong id="heroBefore">4/4</strong><span>baseline attacks succeeded</span></div>
+      <div class="arrow-metric">→</div>
+      <div><strong id="heroAfter">0/4</strong><span>after prompt + control redesign</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="lab-console">
+  <div class="wrap">
+    <div class="lab-toolbar">
+      <div>
+        <div class="eyebrow">PROMPT TEST CONSOLE</div>
+        <h2>Inspect the architecture and run a controlled attack.</h2>
+      </div>
+      <div class="mode-switch" role="group" aria-label="Prompt architecture mode">
+        <button class="mode-btn active" data-mode="vulnerable">V1 Vulnerable</button>
+        <button class="mode-btn" data-mode="hardened">V2 Hardened</button>
+      </div>
+    </div>
+
+    <div class="console-grid">
+      <aside class="scenario-panel">
+        <h3>Adversarial prompt library</h3>
+        <div id="scenarioList" class="scenario-list"></div>
+      </aside>
+
+      <section class="test-panel">
+        <div class="panel-head"><span id="attackId">ASAT-001</span><strong id="attackName">Direct instruction override</strong></div>
+        <div class="prompt-box">
+          <div class="box-label">ATTACK PROMPT</div>
+          <pre id="attackPrompt"></pre>
+        </div>
+        <div class="objective-grid">
+          <div><span>Objective</span><p id="attackObjective"></p></div>
+          <div><span>Evaluator rubric</span><p id="attackRubric"></p></div>
+        </div>
+        <button id="runAttack" class="btn gold run-btn">Run controlled test</button>
+        <div id="resultBox" class="result-box idle">
+          <div class="result-status"><span id="resultStatus">READY</span><small id="resultSeverity"></small></div>
+          <pre id="modelResponse">Select a scenario and run the test.</pre>
+        </div>
+      </section>
+
+      <aside class="architecture-panel">
+        <div class="panel-head"><span>PROMPT ARCHITECTURE</span><strong id="architectureName">Vulnerable baseline</strong></div>
+        <div class="architecture-stack" id="architectureStack"></div>
+        <div class="defense-block"><span>Prompt engineering focus</span><p id="promptSkill"></p></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="evaluation-section">
+  <div class="wrap">
+    <div class="section-head"><div><div class="eyebrow">EVALUATION LOGIC</div><h2>A prompt is not finished until its behavior is measurable.</h2></div><p>I define the expected boundary before testing, capture evidence, map the failure, change the architecture, and rerun the same prompt.</p></div>
+    <div class="eval-flow"><span>Prompt contract</span><i>→</i><span>Attack prompt</span><i>→</i><span>Response capture</span><i>→</i><span>Rubric evaluation</span><i>→</i><span>Mitigation</span><i>→</i><span>Regression retest</span></div>
+    <div class="mapping-grid">
+      <article><span>OWASP risk family</span><strong id="owaspMap">Prompt Injection</strong></article>
+      <article><span>MITRE ATLAS</span><strong id="atlasMap">LLM Prompt Injection</strong></article>
+      <article><span>Mitigation</span><strong id="mitigationText">Instruction hierarchy and trust-boundary separation</strong></article>
+    </div>
+  </div>
+</section>
+
+<section class="comparison-section">
+  <div class="wrap">
+    <div class="section-head"><div><div class="eyebrow">BEFORE / AFTER</div><h2>The prompt architecture is the experiment.</h2></div></div>
+    <div class="compare-grid">
+      <article class="compare-card vulnerable-card"><span>V1 · Baseline</span><h3>Prompt behavior is under-specified.</h3><ul><li>Weak instruction hierarchy</li><li>Untrusted text can act like instructions</li><li>Model chooses privileged tools too freely</li><li>No explicit sensitive-output boundary</li></ul><div class="score">100% attack success</div></article>
+      <article class="compare-card hardened-card"><span>V2 · Hardened</span><h3>Prompt behavior has explicit boundaries.</h3><ul><li>Trusted instructions outrank user/retrieved content</li><li>Untrusted content is labeled as data</li><li>Tool authorization is constrained outside free-form prompting</li><li>Hidden context is excluded from the output contract</li></ul><div class="score">0% attack success</div></article>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio-note">
+  <div class="wrap"><div class="note-card"><div class="eyebrow">WHAT THIS DEMONSTRATES</div><h2>Prompt engineering beyond one-shot prompting.</h2><p>System prompts · instruction hierarchy · context engineering · structured evaluation · tool-use constraints · adversarial prompting · prompt regression testing · evidence-based iteration.</p><a class="btn gold" href="case-study-ai-security.html">Read the full case study</a></div></div>
+</section>
+</main>
+
+<footer><div class="wrap footer-row"><span>© <span id="year"></span> Alfonzo Anthony</span><span>AI Prompt Engineering Portfolio Lab</span></div></footer>
+<script src="prompt-security-lab.js"></script>
+</body>
+</html>
