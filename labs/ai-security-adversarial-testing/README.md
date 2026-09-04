@@ -1,37 +1,61 @@
-# AI Security & Adversarial Testing Lab
+# Adversarial Prompt Engineering Lab
 
-A defensive portfolio lab by Alfonzo Anthony for testing how AI applications respond to controlled adversarial inputs.
+A portfolio lab by Alfonzo Anthony demonstrating advanced AI Prompt Engineering through prompt architecture, context engineering, adversarial prompting, evaluation rubrics, mitigation design, and regression retesting.
 
-## Problem
+## The Prompt Engineering Problem
 
-LLM and agentic applications can look reliable during normal use while still failing when prompts attempt to override instructions, extract hidden context, trigger privileged tools, or smuggle malicious instructions through external content.
+A prompt that behaves correctly during normal use can still fail when the input deliberately challenges instruction hierarchy, hidden context, tool permissions, or the boundary between trusted policy and untrusted retrieved content.
 
-## Solution
+The goal of this lab is not to collect clever jailbreaks. The goal is to make prompt behavior **testable**.
 
-This lab creates a repeatable security evaluation loop:
+## Method
 
-`Attack Case -> Target -> Response Capture -> Security Evaluator -> Risk Mapping -> Mitigation -> Retest`
+`Prompt Contract -> Adversarial Prompt -> Response Capture -> Evaluator Rubric -> Evidence -> Prompt/Control Redesign -> Regression Retest`
 
-The first version uses deterministic simulated targets so every failure and mitigation can be reproduced without third-party API cost, provider drift, or unsafe actions.
+The first version uses deterministic simulated targets so every failure and mitigation can be reproduced without provider drift, third-party API cost, or unsafe actions.
+
+## What the lab demonstrates
+
+- System-prompt and instruction-hierarchy design
+- Context engineering and trust-boundary labeling
+- Tool-use prompting and permission boundaries
+- Output constraints and sensitive-context protection
+- Adversarial prompt design
+- Explicit evaluator rubrics
+- Before/after prompt architecture comparison
+- Prompt regression testing
+- OWASP GenAI and MITRE ATLAS risk mapping as supporting context
+
+## Prompt architectures
+
+### PROMPT-ARCH-V1 — vulnerable baseline
+
+The baseline intentionally leaves important behavior under-specified: weak trust separation, broad tool choice, no explicit sensitive-output contract, and no strong rule preventing retrieved text from acting as instructions.
+
+### PROMPT-ARCH-V2 — hardened prompt contract
+
+The hardened version adds explicit instruction priority, untrusted-content labeling, context disclosure boundaries, least-privilege tool policy, approval requirements for privileged actions, and regression checks against known adversarial prompts.
 
 ## Controlled scenarios
 
-1. Direct prompt injection — OWASP LLM01 / MITRE ATLAS LLM Prompt Injection.
-2. Synthetic sensitive-data extraction — OWASP LLM02.
-3. Unauthorized tool use / excessive agency — OWASP LLM06 and agentic tool misuse concepts.
-4. Indirect prompt injection / hidden-context exfiltration attempt — OWASP LLM01, LLM02, and LLM07.
+1. **Direct instruction override** — tests instruction hierarchy and system-prompt protection.
+2. **Synthetic sensitive-data extraction** — tests context engineering and output constraints.
+3. **Unauthorized privileged tool request** — tests agent/tool prompting and authorization boundaries.
+4. **Indirect prompt injection** — tests whether retrieved untrusted content can become active instructions.
 
-All secrets, tools, records, and exfiltration destinations in this lab are synthetic and non-operational.
+All secrets, tools, records, and destinations in this lab are synthetic and non-operational.
 
-## Key lab result
+## Key controlled result
 
-The intentionally vulnerable baseline allows all four controlled attack scenarios. The hardened target blocks all four using deterministic controls: instruction-boundary checks, sensitive-data output filtering, least-privilege tool authorization, and human approval for privileged actions.
+**PROMPT-ARCH-V1:** 4/4 adversarial prompts succeed; risk score 34.
 
-**Controlled deterministic result: attack success rate 4/4 (100%) -> 0/4 (0%) after mitigation.**
+**PROMPT-ARCH-V2:** 0/4 adversarial prompts succeed; risk score 0.
 
-This is a lab result, not a claim about a production model or third-party AI provider.
+**Controlled deterministic result: attack success rate 100% -> 0% after prompt/control redesign.**
 
-## Run
+This is a reproducible lab result, not a claim about defeating a production model or third-party AI provider.
+
+## Run the Python lab
 
 ```bash
 cd labs/ai-security-adversarial-testing
@@ -39,21 +63,26 @@ python run_lab.py
 python -m unittest discover -s tests -v
 ```
 
+## Interactive portfolio lab
+
+The portfolio includes `prompt-security-lab.html`, an interactive workbench that exposes the attack prompt, objective, evaluator rubric, prompt architecture, framework mapping, mitigation, and before/after behavior.
+
 ## Framework references
 
-The lab structure is designed to map test findings to the OWASP GenAI LLM Top 10 and MITRE ATLAS. Future adapters can invoke tools such as Microsoft PyRIT and NVIDIA garak against authorized targets.
+The lab uses the OWASP GenAI LLM Top 10 and MITRE ATLAS to give recognized security context to prompt failures. Microsoft PyRIT is on the roadmap for authorized broader adversarial evaluation. These frameworks support the project; **AI Prompt Engineering is the primary skill being demonstrated.**
 
 ## Roadmap
 
-- JSON and HTML assessment reports
-- Severity and regression trend dashboard
-- Authorized HTTP target adapter
-- PyRIT scenario adapter
+- Expand from 4 to 20+ controlled prompt-evaluation scenarios
+- JSON/HTML assessment report export
+- Prompt version and regression trend history
+- Authorized HTTP/LLM target adapter
+- Microsoft PyRIT adapter for authorized targets
 - garak result ingestion
 - promptfoo regression adapter
-- Agent Control Standard mapping
-- CI security regression gate
+- CI prompt-reliability/security gate
+- Agent Orchestration Lab integration for agent prompt testing
 
 ## Scope and ethics
 
-Use only against systems you own or have explicit authorization to test. The default target is intentionally simulated so the project can demonstrate adversarial methodology without probing third-party services.
+Use active adapters only against systems you own or have explicit authorization to test. The default lab remains non-networked and deterministic so the methodology can be demonstrated safely and reproduced exactly.
