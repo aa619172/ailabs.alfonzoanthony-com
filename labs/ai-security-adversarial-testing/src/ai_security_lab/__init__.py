@@ -8,6 +8,7 @@ from .core import (
     PromptSecurityEvaluator,
     SimulatedTarget,
     compare_controls,
+    prompt_version_history,
     run_suite,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "PromptSecurityEvaluator",
     "SimulatedTarget",
     "compare_controls",
+    "prompt_version_history",
     "run_suite",
 ]
