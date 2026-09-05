@@ -3,6 +3,7 @@ from .adapters import (
     DeterministicTargetAdapter,
     PromptTargetAdapter,
     TargetAdapterError,
+    TargetResponse,
     run_adapter_suite,
 )
 from .core import (
@@ -43,6 +44,7 @@ __all__ = [
     "DeterministicTargetAdapter",
     "PromptTargetAdapter",
     "TargetAdapterError",
+    "TargetResponse",
     "run_adapter_suite",
     "AGENT_PROMPT_CONTRACTS",
     "PROMPT_EXPERIMENT_VERSIONS",
