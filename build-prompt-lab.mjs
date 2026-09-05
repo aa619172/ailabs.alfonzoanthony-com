@@ -58,8 +58,8 @@ for(const surface of surfaces){
     html=html.replace('</head>',`<script type="application/ld+json" data-prompt-lab-provenance-jsonld>${provenanceJsonLd(surface.path)}</script></head>`);
   }
   if(html.includes('<body>')) html=html.replace('<body>',`<body data-provenance-id="${projectId}" data-portfolio-owner="Alfonzo Anthony">`);
-  if(!html.includes(projectId)){
-    html=html.replace('</footer>',`<span style="display:block;text-align:center;color:#807989;font-size:.68rem;padding:0 18px 14px">Project provenance · ${projectId}</span></footer>`);
+  if(!html.includes('data-prompt-lab-signature')){
+    html=html.replace('</footer>',`<span data-prompt-lab-signature style="display:block;text-align:center;color:#807989;font-size:.68rem;padding:0 18px 14px">Project provenance · ${projectId}</span></footer>`);
   }
   await writeFile(target,html,'utf8');
 }
