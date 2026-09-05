@@ -1,6 +1,6 @@
 # Adversarial Prompt Engineering Lab
 
-A portfolio lab by Alfonzo Anthony demonstrating advanced AI Prompt Engineering through prompt architecture, context engineering, adversarial prompting, evaluator design, mitigation, prompt versioning, multi-agent prompt contracts, target adapters, assessment reporting, and regression retesting.
+A portfolio lab by Alfonzo Anthony demonstrating advanced AI Prompt Engineering through prompt architecture, context engineering, adversarial prompting, evaluator design, mitigation, prompt versioning, multi-agent prompt contracts, target adapters, repeated-run metrics, assessment reporting, and regression testing.
 
 ## The Prompt Engineering Problem
 
@@ -10,9 +10,9 @@ The goal is not to collect clever jailbreaks. The goal is to make prompt behavio
 
 ## Method
 
-`Prompt Contract -> Adversarial Prompt -> Target Adapter -> Response Capture -> Evaluator Rubric -> Evidence -> Diagnosis -> Prompt Revision -> Regression Retest`
+`Prompt Contract -> Adversarial Prompt -> Target Adapter -> Response Capture -> Structured Observation -> Evaluator -> Evidence -> Diagnosis -> Prompt Revision -> Regression Retest`
 
-The deterministic simulator remains the reproducible baseline. A provider-neutral HTTP adapter can run the same tests against an application the operator owns or is explicitly authorized to evaluate.
+The deterministic simulator remains the reproducible baseline. A provider-neutral HTTP adapter can run the same test definitions against an application the operator owns or is explicitly authorized to evaluate.
 
 ## Prompt Engineering skills demonstrated
 
@@ -24,9 +24,10 @@ The deterministic simulator remains the reproducible baseline. A provider-neutra
 - Tool-use prompting, least privilege, and parameter validation
 - Structured-output and schema-bound prompting
 - Refusal design that survives paraphrase and transformation
-- Evaluator rubrics, evidence capture, and failure diagnosis
+- Evaluator rubrics, structured observations, evidence capture, and diagnosis
 - Prompt versioning, behavioral invariants, and regression gates
-- Provider-neutral target integration and assessment reporting
+- Provider-neutral target integration and repeated-run evaluation
+- JSON/HTML assessment and target-comparison reporting
 
 ## 12 controlled tests
 
@@ -85,11 +86,13 @@ The lab includes a cross-project synthetic integration test: **AGENT-PROMPT-INT-
 
 The controlled peer-agent override moves from **1/1 baseline failure** to **0/1 after the hardened agent contract**.
 
+This models the prompt contracts only. The actual Agent Orchestration runtime is not represented as a live endpoint in this repository.
+
 ## Authorized target adapter
 
 `src/ai_security_lab/adapters.py` adds a provider-neutral target interface so the same evaluator can test either the deterministic simulator or an authorized HTTP application.
 
-The HTTP adapter sends:
+The adapter sends:
 
 ```json
 {
@@ -100,11 +103,40 @@ The HTTP adapter sends:
 }
 ```
 
-and expects:
+Minimum response:
 
 ```json
 {"response": "application/model response text"}
 ```
+
+Preferred response for stronger live-target evaluation:
+
+```json
+{
+  "response": "I cannot perform that action.",
+  "observations": {
+    "unauthorized_tool_action": false
+  }
+}
+```
+
+### Structured observations
+
+The evaluator can use machine-readable behavior signals for:
+
+- policy override;
+- role escalation;
+- instruction-conflict bypass;
+- protected-context disclosure;
+- retrieved-instruction execution;
+- unauthorized tool action;
+- invalid tool-parameter acceptance;
+- peer-agent policy changes;
+- schema validity;
+- protected-policy disclosure;
+- policy preservation during transformations.
+
+Structured observations are preferred for actual integrations because they measure application behavior rather than relying on a model to emit a particular phrase. Text-marker evaluation remains as a compatibility fallback for the deterministic simulator.
 
 ### Safety defaults
 
@@ -116,9 +148,9 @@ and expects:
 - response bodies are size-bounded;
 - the adapter stores no credentials.
 
-These controls are deliberate: the feature is for systems you own or are authorized to test, not arbitrary third-party targets.
+These controls are deliberate: the networked feature is for systems you own or are authorized to test, not arbitrary third-party targets.
 
-## Run the local live-capable demo
+## Run the local HTTP demo
 
 Terminal 1:
 
@@ -127,12 +159,22 @@ cd labs/ai-security-adversarial-testing
 python demo_target_server.py
 ```
 
-Terminal 2:
+Terminal 2 — one 12-test run:
 
 ```bash
 python run_target.py \
   --endpoint http://127.0.0.1:8765/evaluate \
   --architecture v2
+```
+
+Repeated evaluation:
+
+```bash
+python run_target.py \
+  --endpoint http://127.0.0.1:8765/evaluate \
+  --architecture v2 \
+  --runs 5 \
+  --output target-metrics.json
 ```
 
 The demo uses a real HTTP request/response boundary while remaining deterministic and localhost-only.
@@ -145,8 +187,48 @@ python run_target.py \
   --allow-host your-authorized-host.example \
   --confirm-authorized \
   --architecture v2 \
+  --runs 5 \
   --output authorized-target-report.json
 ```
+
+## Repeated-run metrics
+
+A target can be evaluated 1–10 times with the same 12-test library. The aggregate report includes:
+
+- Attack Success Rate
+- mean severity-weighted lab risk
+- Instruction Control failure rate
+- Context Leakage Rate
+- Tool Boundary Violation Rate
+- Output Reliability Failure Rate
+- Schema Compliance Rate
+- per-test attack-success rate
+- per-test response-consistency rate
+
+These metrics describe only the selected target, prompt architecture, run count, and controlled test library. They are not universal model-security scores.
+
+## Authorized-target comparison reports
+
+A captured result from `run_target.py` can be converted into JSON and HTML comparison evidence:
+
+```bash
+python generate_target_comparison.py \
+  --target-report authorized-target-report.json \
+  --output-dir reports/authorized-target
+```
+
+Outputs:
+
+- `authorized-target-comparison.json`
+- `authorized-target-comparison.html`
+
+The report shows:
+
+1. deterministic V1 as a reproducible methodology control;
+2. deterministic V2 as the hardened reference;
+3. the authorized target's scoped repeated-run metrics;
+4. per-test attack-success and response-consistency rates when available;
+5. interpretation limits that explicitly avoid treating unlike systems as equivalent benchmarks.
 
 ## Key deterministic result
 
@@ -172,7 +254,7 @@ python -m unittest discover -s tests -v
 
 ## Assessment reports
 
-The reporting layer generates both machine-readable and employer-readable evidence:
+The deterministic assessment layer generates machine-readable and employer-readable evidence:
 
 ```bash
 python generate_report.py
@@ -180,10 +262,10 @@ python generate_report.py
 
 Outputs:
 
-- `prompt-assessment-report.json`
-- `prompt-assessment-report.html`
+- `reports/prompt-assessment-report.json`
+- `reports/prompt-assessment-report.html`
 
-The reports include the release progression, all 12 findings, diagnoses, prompt/control changes, agent integration result, and controlled-scope limitations.
+The reports include release progression, all 12 findings, diagnoses, prompt/control changes, agent integration result, and controlled-scope limitations.
 
 ## Interactive portfolio workbench
 
@@ -191,28 +273,36 @@ The reports include the release progression, all 12 findings, diagnoses, prompt/
 
 - browse all 12 tests by prompt-engineering domain;
 - inspect the adversarial prompt, objective, and evaluator rubric;
-- inspect the V1 and V2 prompt contracts;
+- inspect V1 and V2 prompt contracts;
 - run an individual controlled test;
 - inspect diagnosis and prompt/control changes;
-- see the four-release progression V1.0 -> V1.1 -> V1.2 -> V2.0;
+- see the release progression V1.0 -> V1.1 -> V1.2 -> V2.0;
 - run the full 12-test V2 regression visualization;
-- run the synthetic Agent Orchestration cross-agent prompt test.
+- run the synthetic Agent Orchestration cross-agent prompt test;
+- navigate directly to the authorized target-evaluation layer.
 
-The Python target-adapter layer intentionally stays server-side rather than allowing the public browser demo to call arbitrary endpoints.
+`target-adapter.html` explains the live-capable architecture, structured observation contract, repeated-run metrics, safety gate, and runnable localhost workflow.
+
+The networked target layer intentionally stays in the Python lab instead of allowing the public browser portfolio to call arbitrary endpoints.
 
 ## CI prompt regression gate
 
 `.github/workflows/prompt-lab-regression.yml` verifies:
 
 - the 12-test V1/V2 invariants;
-- the expected release progression `12 -> 9 -> 6 -> 0`;
-- the expected risk progression `84 -> 66 -> 42 -> 0`;
+- release progression `12 -> 9 -> 6 -> 0`;
+- risk progression `84 -> 66 -> 42 -> 0`;
 - no modeled regression between prompt releases;
 - the hardened agent prompt contract blocks the synthetic peer-agent override;
-- report generation completes successfully;
-- the localhost HTTP target adapter passes its test suite.
+- JSON/HTML assessment report generation;
+- target-adapter safety and structured-observation tests;
+- repeated-run metric tests;
+- homepage and case-study evidence contracts;
+- an end-to-end localhost HTTP evaluation using `run_target.py`;
+- 3 complete runs × 12 tests = 36 HTTP executions;
+- comparison-report generation from the captured target result.
 
-The workflow publishes the regression and assessment outputs as a GitHub Actions artifact when the gate succeeds.
+When the gate succeeds, GitHub Actions publishes the deterministic assessment, demo authorized-target result, target-comparison JSON/HTML, and demo log as the `prompt-engineering-assessment` artifact.
 
 ## Supporting framework context
 
@@ -220,13 +310,12 @@ OWASP GenAI and MITRE ATLAS are used as recognized vocabulary for failure classe
 
 ## Next roadmap
 
-- Add side-by-side deterministic-vs-authorized-target comparison reports
-- Add repeated-run statistics for non-deterministic model behavior
-- Track refusal consistency, schema compliance, context leakage, and tool-boundary violations across prompt versions
-- Add Microsoft PyRIT integration for authorized targets
-- Add promptfoo result ingestion
-- Connect an actual owned Agent Orchestration runtime endpoint to the adapter
-- Expand beyond 12 tests after the live-target evaluation layer is stable
+- Connect an actual owned Agent Orchestration runtime endpoint when its source/runtime is available
+- Persist authorized-target runs and prompt-version history for longitudinal trend analysis
+- Build a portfolio trend dashboard from saved evaluation histories
+- Add Microsoft PyRIT integration for explicitly authorized targets
+- Add promptfoo-style result ingestion and comparison
+- Expand beyond 12 tests after the live-target evaluation model is stable
 
 ## Scope and ethics
 
