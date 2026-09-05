@@ -58,10 +58,25 @@ for(const surface of surfaces){
     html=html.replace('</head>',`<script type="application/ld+json" data-prompt-lab-provenance-jsonld>${provenanceJsonLd(surface.path)}</script></head>`);
   }
   if(html.includes('<body>')) html=html.replace('<body>',`<body data-provenance-id="${projectId}" data-portfolio-owner="Alfonzo Anthony">`);
+  if(surface.path!=='prompt-evaluation-dashboard.html'&&!html.includes('href="prompt-evaluation-dashboard.html"')){
+    html=html.replace('<nav class="navlinks">','<nav class="navlinks"><a href="prompt-evaluation-dashboard.html">Dashboard</a>');
+  }
   if(!html.includes('data-prompt-lab-signature')){
     html=html.replace('</footer>',`<span data-prompt-lab-signature style="display:block;text-align:center;color:#807989;font-size:.68rem;padding:0 18px 14px">Project provenance · ${projectId}</span></footer>`);
   }
   await writeFile(target,html,'utf8');
+}
+
+const deployedIndex=`${out}/index.html`;
+if(existsSync(deployedIndex)){
+  let html=await readFile(deployedIndex,'utf8');
+  if(!html.includes('href="prompt-evaluation-dashboard.html"')){
+    html=html.replace(
+      '<a href="target-adapter.html">Target evaluation layer →</a>',
+      '<a href="target-adapter.html">Target evaluation layer →</a> &nbsp; <a href="prompt-evaluation-dashboard.html">Evaluation dashboard →</a>'
+    );
+  }
+  await writeFile(deployedIndex,html,'utf8');
 }
 
 const sha256=async(path)=>{
