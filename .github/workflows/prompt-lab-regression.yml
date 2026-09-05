@@ -6,6 +6,7 @@ on:
       - 'labs/ai-security-adversarial-testing/**'
       - 'prompt-security-lab.*'
       - 'prompt-experiments.css'
+      - 'target-adapter.html'
       - 'case-study-ai-security-lab.html'
       - '.github/workflows/prompt-lab-regression.yml'
   push:
@@ -16,6 +17,7 @@ on:
       - 'labs/ai-security-adversarial-testing/**'
       - 'prompt-security-lab.*'
       - 'prompt-experiments.css'
+      - 'target-adapter.html'
       - 'case-study-ai-security-lab.html'
       - '.github/workflows/prompt-lab-regression.yml'
 
