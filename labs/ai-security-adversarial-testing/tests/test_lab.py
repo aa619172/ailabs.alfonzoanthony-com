@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from ai_security_lab import (
     prompt_version_history,
     run_suite,
 )
+from ai_security_lab.reporting import build_assessment_report, render_html, write_assessment_reports
 
 
 class AdversarialPromptLabTests(unittest.TestCase):
@@ -105,6 +107,25 @@ class AdversarialPromptLabTests(unittest.TestCase):
         self.assertFalse(experiment["hardened"]["failed"])
         self.assertEqual(len(experiment["agent_contracts"]), 3)
         self.assertIn("0/1", experiment["result"])
+
+    def test_assessment_report_contains_all_evidence_layers(self):
+        report = build_assessment_report()
+        self.assertEqual(report["executive_summary"]["release_failure_progression"], [12, 9, 6, 0])
+        self.assertEqual(report["executive_summary"]["release_risk_progression"], [84, 66, 42, 0])
+        self.assertEqual(len(report["findings"]), 12)
+        self.assertEqual(len(report["release_timeline"]), 4)
+        self.assertFalse(report["agent_orchestration_integration"]["hardened"]["failed"])
+
+    def test_html_report_and_files_are_generated(self):
+        report = build_assessment_report()
+        rendered = render_html(report)
+        self.assertIn("Adversarial Prompt Engineering Assessment", rendered)
+        self.assertIn("PROMPT-ARCH-V2.0", rendered)
+        self.assertIn("12/12", rendered)
+        with tempfile.TemporaryDirectory() as tmp:
+            paths = write_assessment_reports(tmp)
+            self.assertTrue(Path(paths["json"]).exists())
+            self.assertTrue(Path(paths["html"]).exists())
 
 
 if __name__ == "__main__":
