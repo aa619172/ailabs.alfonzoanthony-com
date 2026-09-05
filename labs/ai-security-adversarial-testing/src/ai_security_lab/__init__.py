@@ -27,6 +27,16 @@ from .experiments import (
     evaluate_prompt_version,
     prompt_experiment_timeline,
 )
+from .history import (
+    EvaluationHistoryRecord,
+    append_history_record,
+    build_trend_summary,
+    controlled_release_history,
+    history_record_from_report,
+    load_history,
+    render_trend_html,
+    write_trend_reports,
+)
 from .live_metrics import (
     compare_baseline_to_authorized_target,
     run_repeated_adapter_evaluation,
@@ -62,6 +72,14 @@ __all__ = [
     "agent_orchestration_integration",
     "evaluate_prompt_version",
     "prompt_experiment_timeline",
+    "EvaluationHistoryRecord",
+    "append_history_record",
+    "build_trend_summary",
+    "controlled_release_history",
+    "history_record_from_report",
+    "load_history",
+    "render_trend_html",
+    "write_trend_reports",
     "compare_baseline_to_authorized_target",
     "run_repeated_adapter_evaluation",
     "build_target_comparison_report",
