@@ -1,3 +1,10 @@
+from .adapters import (
+    AuthorizedHTTPPromptTarget,
+    DeterministicTargetAdapter,
+    PromptTargetAdapter,
+    TargetAdapterError,
+    run_adapter_suite,
+)
 from .core import (
     ATTACKS,
     HARDENED_ARCHITECTURE,
@@ -32,6 +39,11 @@ __all__ = [
     "compare_controls",
     "prompt_version_history",
     "run_suite",
+    "AuthorizedHTTPPromptTarget",
+    "DeterministicTargetAdapter",
+    "PromptTargetAdapter",
+    "TargetAdapterError",
+    "run_adapter_suite",
     "AGENT_PROMPT_CONTRACTS",
     "PROMPT_EXPERIMENT_VERSIONS",
     "PromptExperimentVersion",
