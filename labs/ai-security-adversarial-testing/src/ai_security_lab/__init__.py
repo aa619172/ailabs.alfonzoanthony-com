@@ -11,6 +11,14 @@ from .core import (
     prompt_version_history,
     run_suite,
 )
+from .experiments import (
+    AGENT_PROMPT_CONTRACTS,
+    PROMPT_EXPERIMENT_VERSIONS,
+    PromptExperimentVersion,
+    agent_orchestration_integration,
+    evaluate_prompt_version,
+    prompt_experiment_timeline,
+)
 
 __all__ = [
     "ATTACKS",
@@ -24,4 +32,10 @@ __all__ = [
     "compare_controls",
     "prompt_version_history",
     "run_suite",
+    "AGENT_PROMPT_CONTRACTS",
+    "PROMPT_EXPERIMENT_VERSIONS",
+    "PromptExperimentVersion",
+    "agent_orchestration_integration",
+    "evaluate_prompt_version",
+    "prompt_experiment_timeline",
 ]
