@@ -59,12 +59,19 @@ class PromptLabPortfolioContractTests(unittest.TestCase):
         self.assertNotIn("0 / 4", homepage)
         self.assertNotIn("34 → 0", homepage)
 
-    def test_case_study_marks_target_layer_as_implemented(self):
+    def test_case_study_marks_current_layers_as_implemented(self):
         case_study = (self.repo_root / "case-study-ai-security-lab.html").read_text(encoding="utf-8")
-        self.assertIn("AUTHORIZED TARGET LAYER", case_study)
-        self.assertIn("IMPLEMENTED EVIDENCE", case_study)
-        self.assertIn("Authorized HTTP target adapter with safety constraints", case_study)
-        self.assertIn("Authorized-target comparison report generator", case_study)
+        for required in (
+            "AUTHORIZED TARGET EVALUATION",
+            "PERSISTENT HISTORY & TRENDS",
+            "IMPLEMENTED EVIDENCE",
+            "Authorized HTTP target adapter",
+            "Persistent JSONL history",
+            "Target-specific regression detection",
+            "prompt-trends.html",
+        ):
+            self.assertIn(required, case_study)
+        self.assertNotIn("Add persistent prompt/run history and trend visualization", case_study)
         self.assertNotIn("<li>Add authorized target adapters.</li>", case_study)
 
     def test_cli_and_demo_server_are_present(self):
@@ -79,6 +86,8 @@ class PromptLabPortfolioContractTests(unittest.TestCase):
         readme = (Path(__file__).resolve().parents[1] / "README.md").read_text(encoding="utf-8")
         self.assertIn("Prompt Engineering skills demonstrated", readme)
         self.assertIn("Authorized target adapter", readme)
+        self.assertIn("Persistent evaluation history — implemented", readme)
+        self.assertIn("Trend analysis — implemented", readme)
         self.assertIn("provider-neutral", readme)
         self.assertIn("explicit authorization", readme)
 
