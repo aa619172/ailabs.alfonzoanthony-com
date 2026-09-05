@@ -27,6 +27,10 @@ from .experiments import (
     evaluate_prompt_version,
     prompt_experiment_timeline,
 )
+from .live_metrics import (
+    compare_baseline_to_authorized_target,
+    run_repeated_adapter_evaluation,
+)
 
 __all__ = [
     "ATTACKS",
@@ -52,4 +56,6 @@ __all__ = [
     "agent_orchestration_integration",
     "evaluate_prompt_version",
     "prompt_experiment_timeline",
+    "compare_baseline_to_authorized_target",
+    "run_repeated_adapter_evaluation",
 ]
