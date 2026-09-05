@@ -64,13 +64,18 @@ class PromptLabPortfolioContractTests(unittest.TestCase):
         for required in (
             "AUTHORIZED TARGET EVALUATION",
             "PERSISTENT HISTORY & TRENDS",
+            "PROMPT EVALUATION DASHBOARD",
+            "PRODUCTION PROVENANCE",
             "IMPLEMENTED EVIDENCE",
             "Authorized HTTP target adapter",
             "Persistent JSONL history",
             "Target-specific regression detection",
-            "prompt-trends.html",
+            "Interactive Prompt Evaluation Dashboard",
+            "prompt-evaluation-dashboard.html",
+            "AA-AILAB-SEC-009",
         ):
             self.assertIn(required, case_study)
+        self.assertNotIn("Build a richer dashboard from multiple saved authorized-target runs", case_study)
         self.assertNotIn("Add persistent prompt/run history and trend visualization", case_study)
         self.assertNotIn("<li>Add authorized target adapters.</li>", case_study)
 
@@ -88,6 +93,9 @@ class PromptLabPortfolioContractTests(unittest.TestCase):
         self.assertIn("Authorized target adapter", readme)
         self.assertIn("Persistent evaluation history — implemented", readme)
         self.assertIn("Trend analysis — implemented", readme)
+        self.assertIn("Prompt Evaluation Dashboard — implemented", readme)
+        self.assertIn("Production provenance build — implemented", readme)
+        self.assertNotIn("Add a richer browser dashboard backed by multiple saved authorized-target runs", readme)
         self.assertIn("provider-neutral", readme)
         self.assertIn("explicit authorization", readme)
 
