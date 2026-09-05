@@ -9,11 +9,19 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from ai_security_lab import compare_controls
+from ai_security_lab import (
+    agent_orchestration_integration,
+    compare_controls,
+    prompt_experiment_timeline,
+)
 
 
 def main() -> None:
-    report = compare_controls()
+    report = {
+        "phase_2_comparison": compare_controls(),
+        "prompt_experiment_timeline": prompt_experiment_timeline(),
+        "agent_orchestration_integration": agent_orchestration_integration(),
+    }
     print(json.dumps(report, indent=2))
 
 
