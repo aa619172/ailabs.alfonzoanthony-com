@@ -31,6 +31,12 @@ from .live_metrics import (
     compare_baseline_to_authorized_target,
     run_repeated_adapter_evaluation,
 )
+from .target_reporting import (
+    build_target_comparison_report,
+    render_target_comparison_html,
+    render_target_comparison_json,
+    write_target_comparison_reports,
+)
 
 __all__ = [
     "ATTACKS",
@@ -58,4 +64,8 @@ __all__ = [
     "prompt_experiment_timeline",
     "compare_baseline_to_authorized_target",
     "run_repeated_adapter_evaluation",
+    "build_target_comparison_report",
+    "render_target_comparison_html",
+    "render_target_comparison_json",
+    "write_target_comparison_reports",
 ]
