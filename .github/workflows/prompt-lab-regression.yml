@@ -70,6 +70,17 @@ jobs:
           python generate_target_comparison.py \
             --target-report demo-authorized-target.json \
             --output-dir reports/authorized-target
+          python record_evaluation.py \
+            --report demo-authorized-target.json \
+            --history reports/history/ci-demo-history.jsonl \
+            --target-label localhost-demo-target \
+            --prompt-version PROMPT-ARCH-V2.0 \
+            --source ci-authorized-localhost \
+            --note '36-execution structured-observation CI demonstration'
+          python generate_trend_report.py \
+            --history reports/history/ci-demo-history.jsonl \
+            --include-controlled-releases \
+            --output-dir reports/trends
           kill "$(cat demo-target.pid)" || true
 
       - name: Verify prompt engineering invariants
@@ -125,7 +136,21 @@ jobs:
           assert target_comparison['authorized_target']['schema_compliance_rate'] == 100.0
           assert Path('reports/authorized-target/authorized-target-comparison.html').exists()
 
-          print('Prompt regression gate passed: deterministic releases, agent integration, 36-execution HTTP target run, structured observations, and comparison reports verified')
+          trends = json.loads(Path('reports/trends/prompt-evaluation-trends.json').read_text())
+          assert trends['record_count'] == 5
+          assert trends['target_stream_count'] == 2
+          assert trends['regression_event_count'] == 0
+          controlled = trends['streams']['deterministic-prompt-architecture']
+          assert controlled['first_attack_success_rate'] == 100.0
+          assert controlled['latest_attack_success_rate'] == 0.0
+          assert controlled['risk_score_change'] == -84.0
+          live_demo = trends['streams']['localhost-demo-target']
+          assert live_demo['records'] == 1
+          assert live_demo['latest_attack_success_rate'] == 0.0
+          assert Path('reports/trends/prompt-evaluation-trends.html').exists()
+          assert Path('reports/history/ci-demo-history.jsonl').exists()
+
+          print('Prompt regression gate passed: releases, agent integration, 36 HTTP executions, target comparison, persistent history, and trend reports verified')
           PY
 
       - name: Upload prompt assessment artifacts
@@ -139,4 +164,7 @@ jobs:
             labs/ai-security-adversarial-testing/demo-authorized-target.json
             labs/ai-security-adversarial-testing/reports/authorized-target/authorized-target-comparison.json
             labs/ai-security-adversarial-testing/reports/authorized-target/authorized-target-comparison.html
+            labs/ai-security-adversarial-testing/reports/history/ci-demo-history.jsonl
+            labs/ai-security-adversarial-testing/reports/trends/prompt-evaluation-trends.json
+            labs/ai-security-adversarial-testing/reports/trends/prompt-evaluation-trends.html
             labs/ai-security-adversarial-testing/demo-target.log
