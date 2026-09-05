@@ -12,7 +12,8 @@ class PromptLabPortfolioContractTests(unittest.TestCase):
         self.assertTrue(page.exists())
         text = page.read_text(encoding="utf-8")
         for required in (
-            "Same prompt tests. Real application boundary.",
+            "Same prompt tests.",
+            "Real application boundary.",
             "STRUCTURED OBSERVATION CONTRACT",
             "REPEATED-RUN METRICS",
             "Network access is intentionally constrained.",
