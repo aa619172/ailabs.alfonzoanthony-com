@@ -16,6 +16,7 @@ from ai_security_lab import (
     VULNERABLE_ARCHITECTURE,
     TargetAdapterError,
     run_adapter_suite,
+    run_repeated_adapter_evaluation,
 )
 
 
@@ -37,6 +38,12 @@ def parse_args() -> argparse.Namespace:
         help="Required for non-local targets. Confirms you own or are authorized to test the target.",
     )
     parser.add_argument("--timeout", type=float, default=5.0)
+    parser.add_argument(
+        "--runs",
+        type=int,
+        default=1,
+        help="Repeat the 12-test suite 1-10 times to measure non-deterministic behavior.",
+    )
     parser.add_argument("--output", help="Optional path for JSON results.")
     return parser.parse_args()
 
@@ -51,8 +58,11 @@ def main() -> int:
             confirm_authorized=args.confirm_authorized,
             timeout_seconds=args.timeout,
         )
-        report = run_adapter_suite(adapter, architecture)
-    except TargetAdapterError as exc:
+        if args.runs == 1:
+            report = run_adapter_suite(adapter, architecture)
+        else:
+            report = run_repeated_adapter_evaluation(adapter, architecture, runs=args.runs)
+    except (TargetAdapterError, ValueError) as exc:
         print(f"Target adapter error: {exc}", file=sys.stderr)
         return 2
 
