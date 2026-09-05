@@ -1,9 +1,9 @@
 {
   "name": "ailabs-alfonzoanthony-com",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs && node build-agent.mjs"
+    "build": "node build.mjs && node build-agent.mjs && node build-prompt-lab.mjs"
   }
 }
