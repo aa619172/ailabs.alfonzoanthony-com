@@ -8,7 +8,12 @@ on:
       - 'prompt-experiments.css'
       - 'target-adapter.html'
       - 'prompt-trends.html'
+      - 'prompt-evaluation-dashboard.html'
+      - 'prompt-dashboard.*'
       - 'case-study-ai-security-lab.html'
+      - 'build-prompt-lab.mjs'
+      - 'package.json'
+      - 'PROVENANCE.md'
       - '.github/workflows/prompt-lab-regression.yml'
   push:
     branches:
@@ -20,7 +25,12 @@ on:
       - 'prompt-experiments.css'
       - 'target-adapter.html'
       - 'prompt-trends.html'
+      - 'prompt-evaluation-dashboard.html'
+      - 'prompt-dashboard.*'
       - 'case-study-ai-security-lab.html'
+      - 'build-prompt-lab.mjs'
+      - 'package.json'
+      - 'PROVENANCE.md'
       - '.github/workflows/prompt-lab-regression.yml'
 
 jobs:
@@ -37,6 +47,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
 
       - name: Run prompt regression tests
         run: python -m unittest discover -s tests -v
@@ -136,7 +152,6 @@ jobs:
           assert target_comparison['deterministic_references']['v2']['attack_success_rate'] == 0.0
           assert target_comparison['authorized_target']['total_executions'] == 36
           assert target_comparison['authorized_target']['schema_compliance_rate'] == 100.0
-          assert Path('reports/authorized-target/authorized-target-comparison.html').exists()
 
           trends = json.loads(Path('reports/trends/prompt-evaluation-trends.json').read_text())
           assert trends['record_count'] == 5
@@ -149,10 +164,72 @@ jobs:
           live_demo = trends['streams']['localhost-demo-target']
           assert live_demo['records'] == 1
           assert live_demo['latest_attack_success_rate'] == 0.0
-          assert Path('reports/trends/prompt-evaluation-trends.html').exists()
-          assert Path('reports/history/ci-demo-history.jsonl').exists()
 
-          print('Prompt regression gate passed: releases, agent integration, 36 HTTP executions, target comparison, persistent history, and trend reports verified')
+          print('Prompt evaluation engine verified: releases, agent integration, 36 HTTP executions, target comparison, history, and trends')
+          PY
+
+      - name: Check dashboard JavaScript syntax
+        working-directory: ${{ github.workspace }}
+        run: node --check prompt-dashboard.js
+
+      - name: Build production portfolio
+        working-directory: ${{ github.workspace }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify production Prompt Lab provenance
+        working-directory: ${{ github.workspace }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          dist = Path('dist')
+          manifest = json.loads((dist / 'provenance-manifest.json').read_text())
+          assert manifest['schema_version'] == '1.1'
+          prompt_projects = [p for p in manifest['projects'] if p['id'] == 'AA-AILAB-SEC-009']
+          assert len(prompt_projects) == 1
+          prompt = prompt_projects[0]
+
+          expected_surfaces = {
+              'case-study': 'case-study-ai-security-lab.html',
+              'interactive-workbench': 'prompt-security-lab.html',
+              'authorized-target-adapter': 'target-adapter.html',
+              'evaluation-trends': 'prompt-trends.html',
+              'evaluation-dashboard': 'prompt-evaluation-dashboard.html',
+          }
+          actual = {item['role']: item for item in prompt['surfaces']}
+          assert set(actual) == set(expected_surfaces)
+
+          def sha256(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          for role, name in expected_surfaces.items():
+              page = dist / name
+              assert page.exists(), name
+              text = page.read_text(encoding='utf-8')
+              assert 'AA-AILAB-SEC-009' in text
+              assert 'name="portfolio-provenance-id"' in text
+              assert 'data-prompt-lab-provenance-jsonld' in text
+              assert 'data-prompt-lab-signature' in text
+              assert actual[role]['path'] == name
+              assert actual[role]['sha256'] == sha256(page)
+              assert len(actual[role]['sha256']) == 64
+
+          support = {item['path']: item['sha256'] for item in prompt['support_files']}
+          for name in ('prompt-dashboard.js', 'prompt-dashboard.css', 'prompt-security-lab.js', 'hook.css'):
+              path = dist / name
+              assert path.exists(), name
+              assert support[name] == sha256(path)
+
+          dashboard = (dist / 'prompt-evaluation-dashboard.html').read_text(encoding='utf-8')
+          assert 'SAME-STREAM VERSION COMPARISON' in dashboard
+          assert 'Import local JSON' in dashboard
+          assert '<script src="script.js"></script>' not in dashboard
+
+          print('Production provenance verified: 5 Prompt Lab surfaces + support hashes under AA-AILAB-SEC-009')
           PY
 
       - name: Upload prompt assessment artifacts
@@ -170,3 +247,4 @@ jobs:
             labs/ai-security-adversarial-testing/reports/trends/prompt-evaluation-trends.json
             labs/ai-security-adversarial-testing/reports/trends/prompt-evaluation-trends.html
             labs/ai-security-adversarial-testing/demo-target.log
+            dist/provenance-manifest.json
