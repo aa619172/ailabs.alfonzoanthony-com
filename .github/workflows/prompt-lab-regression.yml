@@ -40,6 +40,9 @@ jobs:
       - name: Generate deterministic experiment report
         run: python run_lab.py > prompt-regression-report.json
 
+      - name: Generate employer-facing assessment reports
+        run: python generate_report.py
+
       - name: Verify prompt engineering invariants
         run: |
           python - <<'PY'
@@ -72,5 +75,19 @@ jobs:
           assert agent['hardened']['failed'] is False
           assert len(agent['agent_contracts']) == 3
 
-          print('Prompt regression gate passed: 12 -> 9 -> 6 -> 0 failures; agent integration blocked in hardened contract')
+          html_report = Path('reports/prompt-assessment-report.html')
+          json_report = Path('reports/prompt-assessment-report.json')
+          assert html_report.exists() and json_report.exists()
+          assert 'PROMPT-ARCH-V2.0' in html_report.read_text()
+
+          print('Prompt regression gate passed: 12 -> 9 -> 6 -> 0 failures; reports generated; agent integration blocked in hardened contract')
           PY
+
+      - name: Upload prompt assessment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: prompt-engineering-assessment
+          path: |
+            labs/ai-security-adversarial-testing/prompt-regression-report.json
+            labs/ai-security-adversarial-testing/reports/prompt-assessment-report.json
+            labs/ai-security-adversarial-testing/reports/prompt-assessment-report.html
