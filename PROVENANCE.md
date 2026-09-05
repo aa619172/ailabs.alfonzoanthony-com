@@ -20,7 +20,8 @@ Viewing this portfolio does not grant permission to copy, reproduce, redistribut
 | GPU Fleet Lab | AA-AILAB-GPU-006 |
 | Prompt Reliability Lab | AA-AILAB-PROMPT-007 |
 | Agent Orchestration Lab | AA-AILAB-AGENT-008 |
-| AI Security & Adversarial Testing Lab | AA-AILAB-SEC-009 |
+| Adversarial Prompt Engineering Lab | AA-AILAB-SEC-009 |
+| Authorized Target Adapter (Prompt Lab evaluation layer) | AA-AILAB-SEC-009 |
 
 ## Deployment integrity
 
