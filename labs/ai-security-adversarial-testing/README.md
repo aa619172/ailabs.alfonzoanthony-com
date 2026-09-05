@@ -1,6 +1,6 @@
 # Adversarial Prompt Engineering Lab
 
-A portfolio lab by Alfonzo Anthony demonstrating advanced AI Prompt Engineering through prompt architecture, context engineering, adversarial prompting, evaluator design, mitigation, prompt versioning, multi-agent prompt contracts, authorized target adapters, repeated-run metrics, persistent evaluation history, trend analysis, reporting, and regression testing.
+A portfolio lab by Alfonzo Anthony demonstrating advanced AI Prompt Engineering through prompt architecture, context engineering, adversarial prompting, evaluator design, mitigation, prompt versioning, multi-agent prompt contracts, authorized target adapters, repeated-run metrics, persistent evaluation history, trend analysis, an interactive evaluation dashboard, reporting, provenance, and regression testing.
 
 ## The Prompt Engineering problem
 
@@ -10,7 +10,7 @@ The goal is not to collect clever jailbreaks. The goal is to make prompt behavio
 
 ## Method
 
-`Prompt Contract -> Adversarial Prompt -> Target -> Structured Observation -> Evaluator -> Evidence -> Diagnosis -> Prompt Revision -> Regression Retest -> History -> Trend Analysis`
+`Prompt Contract -> Adversarial Prompt -> Target -> Structured Observation -> Evaluator -> Evidence -> Diagnosis -> Prompt Revision -> Regression Retest -> History -> Trend Analysis -> Dashboard`
 
 The deterministic simulator remains the reproducible baseline. A provider-neutral HTTP adapter can run the same test definitions against an application the operator owns or is explicitly authorized to evaluate.
 
@@ -27,7 +27,9 @@ The deterministic simulator remains the reproducible baseline. A provider-neutra
 - Prompt versioning and regression gates
 - Provider-neutral target integration and repeated-run evaluation
 - Persistent JSONL evaluation history and target-specific trend analysis
+- Interactive same-stream prompt-version comparison
 - JSON/HTML assessment, comparison, and trend reporting
+- Production provenance and SHA-256 deployment integrity
 - CI verification and artifact publishing
 
 ## 12 controlled tests
@@ -241,7 +243,28 @@ The CI demonstration currently verifies:
 - 2 target streams;
 - 0 detected regression events in that controlled demonstration.
 
-`prompt-trends.html` presents this methodology as employer-facing portfolio evidence.
+`prompt-trends.html` presents the trend methodology as employer-facing portfolio evidence.
+
+## Prompt Evaluation Dashboard — implemented
+
+`prompt-evaluation-dashboard.html` turns saved evaluation history into an interactive portfolio surface.
+
+It includes:
+
+- target-stream selection;
+- strict same-stream version comparison;
+- attack-success and lab-risk trend visualization;
+- latest Instruction Control, Context Leakage, Tool Boundary, Output Reliability, and Schema Compliance metrics;
+- version-to-version deltas;
+- regression monitoring;
+- evaluation-history table;
+- record-level source, adapter, architecture, timestamp, and note visibility;
+- a built-in CI-verified demonstration using the two separate project streams;
+- local import of generated `prompt-evaluation-trends.json` files with the browser `FileReader` API.
+
+Imported trend files are processed locally by the page. The dashboard has no upload endpoint and the dashboard JavaScript contains no network fetch path.
+
+The built-in dashboard data keeps the deterministic release stream separate from the localhost HTTP demonstration. It does not turn unrelated systems into a single benchmark or leaderboard.
 
 ## Deterministic assessment reports
 
@@ -258,12 +281,32 @@ They include release progression, all 12 findings, diagnoses, prompt/control cha
 
 ## Portfolio surfaces
 
+All of these Prompt Lab surfaces share provenance ID **AA-AILAB-SEC-009**:
+
+- `case-study-ai-security-lab.html` — employer-facing case study tying the engineering decisions together.
 - `prompt-security-lab.html` — interactive 12-test workbench, prompt contracts, per-test history, release progression, and Agent prompt test.
 - `target-adapter.html` — authorized target architecture, structured observations, repeated-run metrics, and safety gate.
 - `prompt-trends.html` — persistent evaluation history, target-stream separation, regression logic, and trend workflow.
-- `case-study-ai-security-lab.html` — employer-facing case study tying the engineering decisions together.
+- `prompt-evaluation-dashboard.html` — interactive target-specific evaluation operations dashboard.
 
 The public browser portfolio does not provide an arbitrary endpoint field. Networked evaluation remains in the controlled Python lab.
+
+## Production provenance build — implemented
+
+`build-prompt-lab.mjs` is part of `npm run build` and makes the Prompt Lab surfaces part of the actual deployed `dist/` output.
+
+For each registered Prompt Lab page, the production build adds:
+
+- author and copyright metadata;
+- `noimageindex` metadata;
+- `portfolio-provenance-id=AA-AILAB-SEC-009`;
+- JSON-LD creator and identifier metadata;
+- `data-provenance-id=AA-AILAB-SEC-009` on the document body;
+- a visible production provenance signature.
+
+The deployment manifest uses schema version 1.1 for the Prompt Lab record and stores SHA-256 hashes for all five registered HTML surfaces plus the supporting Prompt Lab CSS/JavaScript files.
+
+The deployment build also surfaces the Prompt Evaluation Dashboard through Prompt Lab navigation and the flagship homepage path.
 
 ## CI Prompt Lab Regression Gate
 
@@ -277,14 +320,18 @@ The public browser portfolio does not provide an arbitrary endpoint field. Netwo
 - assessment report generation;
 - target-adapter safety and structured-observation behavior;
 - repeated-run metric tests;
-- portfolio evidence contracts;
+- JSONL history recording;
+- target-specific trend generation and regression checks;
+- Prompt Evaluation Dashboard content and local-import contract;
+- dashboard JavaScript syntax;
 - an end-to-end localhost HTTP evaluation using the real CLI;
 - 3 complete runs × 12 tests = 36 HTTP executions;
-- authorized-target comparison report generation;
-- JSONL history recording;
-- target-specific trend generation and regression checks.
+- the actual production `npm run build`;
+- presence of all five Prompt Lab pages in `dist/`;
+- embedded Prompt Lab provenance metadata/signatures;
+- manifest surface/support-file SHA-256 integrity under `AA-AILAB-SEC-009`.
 
-When the gate succeeds, GitHub Actions publishes the deterministic assessment, demo authorized-target result, comparison reports, evaluation history, trend reports, and demo log as the `prompt-engineering-assessment` artifact.
+When the gate succeeds, GitHub Actions publishes the deterministic assessment, demo authorized-target result, comparison reports, evaluation history, trend reports, demo log, and production provenance manifest as the `prompt-engineering-assessment` artifact.
 
 ## Supporting framework context
 
@@ -293,7 +340,8 @@ OWASP GenAI and MITRE ATLAS provide recognized vocabulary for failure classes. M
 ## Next roadmap
 
 - Connect an actual owned Agent Orchestration runtime endpoint when its source/runtime is available
-- Add a richer browser dashboard backed by multiple saved authorized-target runs
+- Feed the dashboard with multiple saved runs from the same owned authorized target
+- Add time-window and prompt-version filtering once multiple real authorized-target history records exist
 - Add Microsoft PyRIT integration for explicitly authorized targets
 - Add promptfoo-style result ingestion and comparison
 - Expand beyond 12 tests after the live-target evaluation model is stable
