@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { caseStudies } from '../data/content'
 import { PageEyebrow, PageLead, PageTitle, WhyWorkFooter } from '../components/aivor/AivorShell'
+import { ZoomableProjectImage } from '../components/aivor/ZoomableProjectImage'
 import { IconSearch } from '../components/aivor/icons'
 
 export default function ProjectsPage() {
@@ -77,24 +78,19 @@ export default function ProjectsPage() {
               <p className="mt-4 text-xs text-muted lg:hidden">{project.period}</p>
             </div>
             {images.length > 0 ? (
-              <Link
-                to={`/projects/${project.id}`}
-                className="flex w-full shrink-0 flex-col gap-2 lg:w-72"
-              >
+              <div className="flex w-full shrink-0 flex-col gap-2 lg:w-72">
                 {images.map((src) => (
                   <div
                     key={src}
                     className="overflow-hidden rounded-xl border border-line bg-screenshot transition hover:border-border-hover"
                   >
-                    <img
+                    <ZoomableProjectImage
                       src={src}
                       alt={`${project.title} screenshot`}
-                      className="h-auto w-full object-cover object-top"
-                      loading="lazy"
                     />
                   </div>
                 ))}
-              </Link>
+              </div>
             ) : (
               <div className="h-36 w-full shrink-0 rounded-xl border border-line bg-canvas lg:h-40 lg:w-72" />
             )}

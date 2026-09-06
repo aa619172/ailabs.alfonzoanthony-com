@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { PageEyebrow, WhyWorkFooter } from '../components/aivor/AivorShell'
-import { caseStudies, kindLabel, site } from '../data/content'
+import { ZoomableProjectImage } from '../components/aivor/ZoomableProjectImage'
+import { caseStudies, kindLabel } from '../data/content'
 import { getCaseStudyDetail } from '../data/caseStudyDetails'
 
 export default function ProjectCaseStudyPage() {
@@ -33,7 +34,7 @@ export default function ProjectCaseStudyPage() {
       <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-surface">
         {images[0] ? (
           <div className="border-b border-line bg-screenshot">
-            <img
+            <ZoomableProjectImage
               src={images[0]}
               alt={`${project.title} preview`}
               className="max-h-[420px] w-full object-cover object-top"
@@ -76,11 +77,9 @@ export default function ProjectCaseStudyPage() {
               key={src}
               className="overflow-hidden rounded-2xl border border-line bg-screenshot"
             >
-              <img
+              <ZoomableProjectImage
                 src={src}
                 alt={`${project.title} additional screenshot`}
-                className="w-full object-cover object-top"
-                loading="lazy"
               />
             </div>
           ))}
@@ -120,12 +119,6 @@ export default function ProjectCaseStudyPage() {
             View repository
           </a>
         ) : null}
-        <a
-          href={site.uxPortfolioUrl}
-          className="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:text-ink"
-        >
-          UX portfolio
-        </a>
       </div>
 
       <WhyWorkFooter />
