@@ -21,7 +21,10 @@ On your PC:
 cd C:\Users\crusoe\Projects\alfonzo-portfolio
 npm ci
 npm run build
+npm run zip:hostinger
 ```
+
+Use **`ailabs-upload-linux.zip`** (not a plain Windows `Compress-Archive` zip). Windows zips often store paths as `assets\file.js`, and Hostinger’s extractor creates broken filenames like `assets\index-….js` instead of an `assets/` folder.
 
 In **hPanel → Files → File Manager** → open the folder for **ailabs.alfonzoanthony.com** (often `domains/ailabs.alfonzoanthony.com/public_html`):
 
@@ -30,6 +33,31 @@ In **hPanel → Files → File Manager** → open the folder for **ailabs.alfonz
 3. Confirm `index.html`, `assets/`, `.htaccess`, and `Alfonzo_Anthony_Resume.pdf` are at the root of `public_html`.
 
 Reload **https://ailabs.alfonzoanthony.com**.
+
+## Still seeing “You Are All Set to Go!”?
+
+Your files are in the **wrong directory** for this subdomain. The bicycle page is Hostinger’s **default site in the real document root**, not your upload.
+
+### Find the correct folder
+
+1. **hPanel → Websites** → select **ailabs.alfonzoanthony.com** → **Manage**.
+2. Open **Domain** / **Hosting plan** / **Advanced** (wording varies) and find **Document root** or **Root directory**.  
+   Common paths:
+   - `domains/ailabs.alfonzoanthony.com/public_html`
+   - `public_html` (main site root — **not** `public_html/ailabs` unless the panel says so)
+3. In **File Manager**, go to **that exact path** (use the path bar; start from home, not only `public_html/ailabs`).
+
+### Fix
+
+1. In the **document root** folder, delete **`default.php`** / Hostinger placeholder files.
+2. Put your site **in that folder’s root** (`index.html`, `assets/`, `.htaccess`, etc.):
+   - **Move** everything from `public_html/ailabs/` into the document root, **or**
+   - Re-upload / extract `ailabs-upload-linux.zip` there (empty folder name, overwrite on).
+3. Hard refresh **https://ailabs.alfonzoanthony.com**.
+
+If hPanel lets you **change the subdomain document root** to `public_html/ailabs`, you can keep files where they are instead of moving them.
+
+**Quick check:** In the folder Hostinger says is the root, you must see **your** `index.html` (~1 KB Vite build) and **`assets/`** — not only `default.php`.
 
 ## 3. Automatic deploys (optional)
 
