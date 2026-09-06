@@ -66,7 +66,7 @@ export function ZoomableProjectImage({
         aria-label={`Zoom ${alt}`}
       >
         <img src={src} alt={alt} className={className} loading="lazy" />
-        <span className="pointer-events-none absolute bottom-3 right-3 rounded-full border border-line bg-surface/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-muted opacity-0 backdrop-blur transition group-hover:opacity-100">
+        <span className="pointer-events-none absolute bottom-3 right-3 rounded-full border border-line bg-surface/95 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-muted backdrop-blur">
           ↗ Zoom
         </span>
       </button>

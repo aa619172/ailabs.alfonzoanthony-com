@@ -5,7 +5,6 @@ export const site = {
   roleShort: 'AI Prompt Engineer',
   tagline: 'AI Prompt Engineer · Automation Builder · Product Developer',
   url: 'https://ailabs.alfonzoanthony.com',
-  uxPortfolioUrl: 'https://uxportfolio.alfonzoanthony.com',
   mainSiteUrl: 'https://www.alfonzoanthony.com',
   resumePdf: '/Alfonzo_Anthony_Resume.pdf',
   githubProfile: 'https://github.com/aa619172',
