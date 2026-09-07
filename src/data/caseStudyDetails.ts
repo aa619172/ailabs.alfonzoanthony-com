@@ -30,6 +30,17 @@ export const caseStudyDetails: Record<string, CaseStudyDetail> = {
     impact:
       'The outcome is PromptOps in practice: production readiness scoring, regression detection, and a clear recovery path when something breaks. You can treat prompts more like software — test before you ship.',
   },
+  'adversarial-prompt-lab': {
+    role: 'AI Prompt Engineer',
+    context:
+      'I built this lab to show prompt engineering as an engineering discipline — not just clever wording on the happy path, but testable contracts under hostile, conflicting, and edge-case inputs.',
+    challenge:
+      'The problem was false confidence. A prompt can look fine in a demo while instruction hierarchy, context boundaries, tool permissions, refusal behavior, and output schemas stay under-specified. When inputs get conflicting, retrieved, agent-generated, or adversarial, those hidden gaps show up as failures — and teams often have no reproducible way to test or version the fix.',
+    whatIBuilt:
+      'I built a deterministic Adversarial Prompt Engineering Lab with two explicit prompt architectures (PROMPT-ARCH-V1 baseline and PROMPT-ARCH-V2 hardened contract), 12 controlled tests across four domains, evaluator rubrics, response evidence, diagnosis notes, prompt version history, and regression retests. The Python lab lives in `labs/ai-security-adversarial-testing/` with a CLI runner and unit tests — all synthetic data, no external model API required.',
+    impact:
+      'The outcome is measurable prompt behavior inside a controlled lab: 12/12 tests exposed intentionally designed V1 failures (lab risk score 84), then 0/12 after the V2 prompt/control redesign (score 0). That is a project-specific simulation result — not a claim about defeating a production model — but it proves I can architect, attack, diagnose, revise, and retest prompts like software.',
+  },
   'gpu-fleet': {
     role: 'Systems Engineer',
     context:

@@ -1,0 +1,125 @@
+---
+description: Alfonzo Anthony AI Labs portfolio — architecture, content, deploy, and conventions
+alwaysApply: true
+---
+
+# ailabs.alfonzoanthony.com — Cursor project context
+
+## What this is
+
+React/Vite portfolio for **Alfonzo Anthony — AI Prompt Engineer**, cloned from the **AIVOR** Framer layout (light/dark workspace UI). Live site: https://ailabs.alfonzoanthony.com
+
+GitHub: https://github.com/aa619172/ailabs.alfonzoanthony-com
+
+## Tech stack
+
+- React 19 + TypeScript + Vite 8
+- React Router 7 (client-side routes; `public/.htaccess` for SPA on Hostinger)
+- Tailwind CSS v4 (`@import 'tailwindcss'` + `@theme` tokens in `src/index.css`)
+- No backend — contact form is local-only demo
+
+## Commands
+
+```bash
+npm run dev          # http://127.0.0.1:5173
+npm run build        # outputs dist/
+npm run zip:hostinger  # ailabs-upload-linux.zip for manual Hostinger upload
+```
+
+## Routes
+
+| Path | Page |
+|------|------|
+| `/` | HomePage — conversational ask bar + quick links |
+| `/projects` | Projects list with search |
+| `/projects/:id` | Case study detail |
+| `/experience` | Work history |
+| `/about` | About + hobbies + why work with me |
+| `/about#hobbies` | Hobby gallery (personal art, not client work) |
+| `/contact` | Contact form |
+| `/cv` | Resume download |
+| `/ai-agents` | Agent systems overview |
+
+## Key files
+
+| File | Purpose |
+|------|---------|
+| `src/data/content.ts` | Site metadata, `caseStudies[]`, experience, about copy, agents |
+| `src/data/caseStudyDetails.ts` | Full case study bodies keyed by project `id` |
+| `src/data/hobbies.ts` | Hobby groups, photos, prompting hobby |
+| `src/components/aivor/AivorShell.tsx` | Layout shell, sidebar nav, page chrome |
+| `src/components/aivor/ZoomableProjectImage.tsx` | Project screenshots — zoom, scroll, right-click block |
+| `src/components/aivor/ThemeToggle.tsx` | Light / Dark / System theme |
+| `src/theme/ThemeProvider.tsx` | Theme state + `localStorage` key `ailabs-theme` (default: dark) |
+| `src/config.ts` | `UNDER_CONSTRUCTION` flag |
+| `src/index.css` | Theme CSS variables + protection styles |
+
+## Design tokens (semantic — use these, not hardcoded hex)
+
+- `bg-canvas`, `text-ink`, `text-muted`, `border-line`, `text-accent`
+- `bg-surface` (cards), `bg-surface-muted`, `bg-primary` / `text-primary-fg` (buttons)
+- `bg-screenshot` (dark frame behind project screenshots)
+
+## Content conventions
+
+### Case studies
+
+Every case study in `caseStudyDetails.ts` follows:
+
+1. **The problem** — what was broken or missing
+2. **What I did** — first-person, natural language
+3. **Outcome** — honest results only; no fake metrics
+
+Project list blurbs in `content.ts` use the same problem → action → outcome voice.
+
+### Featured projects (9)
+
+`agent-orchestration`, `prompt-reliability`, `adversarial-prompt-lab`, `gpu-fleet`, `2timesacharm`, `credit-rise`, `ai-video-engine`, `crusoe-rippro`, `mockup-magic`
+
+**Live-tested metrics (2TimesACharm only):** 16,653 reach · $26.53 ad spend · within 7 days
+
+### About page personal story
+
+`about.personalStory[]` in `content.ts` — artist + 20 years tech + prompting as art. Rendered in a **“Who I am”** card on AboutPage.
+
+### Hobbies
+
+Personal work only (painting, laser, paper mache, construction, prompting). Not client portfolio work. Images in `public/hobbies/`.
+
+### Contact
+
+Email: `contact@alfonzoanthony.com` (in `site.email`)
+
+### Explicitly excluded from site
+
+Outlier, Datannation.tech, Amazon MTurk AI training, contract AI training platforms.
+
+## Project images
+
+- Screenshots in `public/projects/`
+- Use `ZoomableProjectImage` component — click to zoom, scroll to pan when zoomed, Ctrl+scroll to zoom
+- Right-click and drag blocked; watermark + PrintScreen deterrence in viewer
+- **No UX portfolio button** on case study pages
+
+## Deployment
+
+- **Auto:** push to `main` → GitHub Actions `.github/workflows/deploy-hostinger.yml` (FTP to Hostinger)
+- **Manual:** `npm run build` → upload `dist/` contents or extract `ailabs-upload-linux.zip` into subdomain `public_html`
+- Do **not** use Windows `Compress-Archive` for Hostinger (breaks `assets/` paths)
+
+## Editing checklist
+
+When adding a project:
+
+1. Add PNG to `public/projects/`
+2. Add entry to `caseStudies` in `content.ts` (with `previewImage`, optional `galleryImages`, `repoUrl`)
+3. Add full copy to `caseStudyDetails.ts` (problem / what I did / outcome)
+4. Case study page is automatic via `/projects/:id`
+
+When changing copy, prefer editing `src/data/*.ts` over hardcoding in page components.
+
+## Code style
+
+- Match existing AIVOR patterns; minimal diffs
+- Use semantic theme tokens, not `bg-white` or raw hex
+- Page components in `src/pages/`; shared UI in `src/components/aivor/`

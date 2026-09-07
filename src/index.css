@@ -103,3 +103,83 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
+
+.protected-image,
+.protected-image img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.image-viewer-scroll {
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+}
+
+.image-viewer-watermark {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  overflow: hidden;
+  opacity: 0.16;
+}
+
+.image-viewer-watermark span {
+  rotate: -24deg;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.protection-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 120;
+  max-width: min(92vw, 28rem);
+  translate: -50% 120%;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  padding: 0.65rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-ink);
+  opacity: 0;
+  transition:
+    translate 0.2s ease,
+    opacity 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.protection-toast.show {
+  translate: -50% 0;
+  opacity: 1;
+}
+
+body.capture-alert::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.82);
+  animation: capture-flash 1.6s ease;
+}
+
+@keyframes capture-flash {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -52,7 +52,7 @@ export const askResponses: Record<string, string> = {
   background:
     'Graphic design roots, 20+ years in technical support, now building AI automation, prompt systems, and product software end to end.',
   projects:
-    'I have 8 featured builds — from live-tested n8n ad engines to desktop print tools, SaaS mockup platforms, and AI lab systems.',
+    'I have 9 featured builds — from adversarial prompt labs and live-tested n8n ad engines to desktop print tools, SaaS mockup platforms, and AI lab systems.',
   experience:
     'Independent AI builder since 2025, AT&T technical support and peer mentor since 2015, freelance design since 2000.',
   agents:
@@ -61,14 +61,14 @@ export const askResponses: Record<string, string> = {
 }
 
 export const stats = [
-  { label: 'Featured AI builds', value: '8' },
+  { label: 'Featured AI builds', value: '9' },
   { label: 'n8n engines built', value: '2' },
   { label: 'People reached (live Meta test)', value: '16,653' },
   { label: 'Ad spend · within 7 days', value: '$26.53' },
 ] as const
 
 export const experienceStats = [
-  { value: '8', label: 'AI case studies' },
+  { value: '9', label: 'AI case studies' },
   { value: '2', label: 'live-tested automations' },
   { value: '3 layers', label: 'prompt · workflow · product' },
 ] as const
@@ -99,6 +99,28 @@ export const caseStudies: readonly CaseStudy[] = [
       'Prompt changes were shipping without regression checks. I built a reliability platform for versioning, evaluation, and verified fixes — so teams know a change is safe before users see it.',
     stack: ['LLM eval', 'PromptOps', 'Structured output', 'Regression testing'],
     previewImage: '/projects/prompt-reliability-lab.png',
+  },
+  {
+    id: 'adversarial-prompt-lab',
+    title: 'Adversarial Prompt Engineering Lab',
+    category: 'Adversarial evaluation · Prompt architecture',
+    kind: 'lab',
+    eyebrow: 'AI prompt engineering',
+    org: 'Independent Lab',
+    period: '2025 — 2026',
+    description:
+      'Happy-path prompts can still fail under hostile inputs. I built a deterministic lab with two prompt architectures, 12 controlled adversarial tests, evaluator rubrics, version history, and regression retests.',
+    stack: [
+      'Prompt architecture',
+      'Context engineering',
+      'Adversarial prompting',
+      'Regression testing',
+      'Python',
+    ],
+    previewImage: '/projects/adversarial-prompt-lab.svg',
+    repoUrl:
+      'https://github.com/aa619172/ailabs.alfonzoanthony-com/tree/main/labs/ai-security-adversarial-testing',
+    highlight: '12/12 V1 failures → 0/12 V2 · controlled lab result',
   },
   {
     id: 'gpu-fleet',
@@ -200,6 +222,12 @@ export const agents = [
     title: 'Prompt Evaluation Suite',
     description:
       'Versions prompts, runs reusable evaluations, validates structured output, detects regressions, and verifies corrective changes before deployment.',
+  },
+  {
+    org: 'Adversarial Prompt Engineering Lab',
+    title: 'Prompt Security Workbench',
+    description:
+      'Tests instruction hierarchy, context boundaries, tool constraints, and output contracts with 12 adversarial scenarios, V1/V2 prompt architectures, and regression retests.',
   },
   {
     org: 'GPU Fleet Lab',

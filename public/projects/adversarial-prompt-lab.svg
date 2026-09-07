@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Adversarial Prompt Engineering Lab regression console">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0f0e"/>
+      <stop offset="100%" stop-color="#1a1a18"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)"/>
+  <rect x="48" y="48" width="1104" height="624" rx="24" fill="#1a1a18" stroke="#2c2c2a"/>
+  <text x="80" y="98" fill="#c4936f" font-family="Inter, sans-serif" font-size="14" letter-spacing="3">ADVERSARIAL PROMPT ENGINEERING LAB</text>
+  <text x="80" y="140" fill="#f2f2ef" font-family="Georgia, serif" font-size="34">Prompt Regression Console</text>
+  <rect x="80" y="170" width="180" height="36" rx="18" fill="#2a2824" stroke="#3d3d38"/>
+  <text x="104" y="193" fill="#9a9994" font-family="Inter, sans-serif" font-size="13">V1 BASELINE ’ V2 HARDENED</text>
+  <rect x="80" y="230" width="320" height="110" rx="16" fill="#111110" stroke="#2c2c2a"/>
+  <text x="104" y="268" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="28" font-weight="600">12</text>
+  <text x="104" y="296" fill="#9a9994" font-family="Inter, sans-serif" font-size="14">controlled prompt tests</text>
+  <rect x="420" y="230" width="320" height="110" rx="16" fill="#111110" stroke="#2c2c2a"/>
+  <text x="444" y="268" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="28" font-weight="600">84 ’ 0</text>
+  <text x="444" y="296" fill="#9a9994" font-family="Inter, sans-serif" font-size="14">lab risk score (V1 vs V2)</text>
+  <rect x="760" y="230" width="320" height="110" rx="16" fill="#111110" stroke="#2c2c2a"/>
+  <text x="784" y="268" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="28" font-weight="600">4 domains</text>
+  <text x="784" y="296" fill="#9a9994" font-family="Inter, sans-serif" font-size="14">instruction · context · agent · output</text>
+  <text x="80" y="390" fill="#c4936f" font-family="Inter, sans-serif" font-size="12" letter-spacing="2">01 INSTRUCTION CONTROL</text>
+  <rect x="80" y="404" width="1040" height="52" rx="12" fill="#111110" stroke="#2c2c2a"/>
+  <text x="104" y="436" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="16">Direct override · role escalation · conflict manipulation</text>
+  <text x="980" y="436" fill="#c4936f" font-family="Inter, sans-serif" font-size="14">3/3 ’ 0/3</text>
+  <text x="80" y="490" fill="#c4936f" font-family="Inter, sans-serif" font-size="12" letter-spacing="2">02 CONTEXT ENGINEERING</text>
+  <rect x="80" y="504" width="1040" height="52" rx="12" fill="#111110" stroke="#2c2c2a"/>
+  <text x="104" y="536" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="16">Secret extraction · boundary confusion · retrieval injection</text>
+  <text x="980" y="536" fill="#c4936f" font-family="Inter, sans-serif" font-size="14">3/3 ’ 0/3</text>
+  <text x="80" y="590" fill="#c4936f" font-family="Inter, sans-serif" font-size="12" letter-spacing="2">03 AGENT &amp; TOOL · 04 OUTPUT &amp; RELIABILITY</text>
+  <rect x="80" y="604" width="1040" height="52" rx="12" fill="#111110" stroke="#2c2c2a"/>
+  <text x="104" y="636" fill="#f2f2ef" font-family="Inter, sans-serif" font-size="16">Tool constraints · schema contracts · refusal invariants · regression drift</text>
+  <text x="980" y="636" fill="#c4936f" font-family="Inter, sans-serif" font-size="14">6/6 ’ 0/6</text>
+</svg>
