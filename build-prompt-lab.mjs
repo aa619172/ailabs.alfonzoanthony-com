@@ -12,6 +12,7 @@ if(!existsSync(out)) throw new Error('dist/ does not exist. Run build.mjs first.
 const surfaces=[
   {role:'case-study',path:'case-study-ai-security-lab.html'},
   {role:'interactive-workbench',path:'prompt-security-lab.html'},
+  {role:'portfolio-interactive-ui',path:'adversarial-prompt-lab-ui.html'},
   {role:'authorized-target-adapter',path:'target-adapter.html'},
   {role:'evaluation-trends',path:'prompt-trends.html'},
   {role:'evaluation-dashboard',path:'prompt-evaluation-dashboard.html'}
