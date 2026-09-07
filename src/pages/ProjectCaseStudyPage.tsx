@@ -4,6 +4,8 @@ import { ZoomableProjectImage } from '../components/aivor/ZoomableProjectImage'
 import { caseStudies, kindLabel } from '../data/content'
 import { getCaseStudyDetail } from '../data/caseStudyDetails'
 
+const FLAGSHIP_ID = 'adversarial-prompt-lab'
+
 export default function ProjectCaseStudyPage() {
   const { id } = useParams<{ id: string }>()
   const project = caseStudies.find((p) => p.id === id)
@@ -13,6 +15,7 @@ export default function ProjectCaseStudyPage() {
     return <Navigate to="/projects" replace />
   }
 
+  const isFlagship = project.id === FLAGSHIP_ID
   const images =
     project.galleryImages ?? (project.previewImage ? [project.previewImage] : [])
 
@@ -42,6 +45,11 @@ export default function ProjectCaseStudyPage() {
           </div>
         ) : null}
         <div className="p-6 md:p-8">
+          {isFlagship ? (
+            <span className="mb-3 inline-flex rounded-full border border-line bg-canvas px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+              Flagship project
+            </span>
+          ) : null}
           <p className="text-xs text-muted">{project.period}</p>
           <h1 className="mt-2 font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-tight text-ink">
             {project.title}
@@ -53,6 +61,23 @@ export default function ProjectCaseStudyPage() {
           ) : null}
         </div>
       </div>
+
+      {isFlagship ? (
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-line bg-surface p-5">
+            <strong className="block font-display text-2xl text-ink">12</strong>
+            <span className="mt-1 block text-xs text-muted">controlled adversarial tests</span>
+          </div>
+          <div className="rounded-2xl border border-line bg-surface p-5">
+            <strong className="block font-display text-2xl text-ink">12 → 0</strong>
+            <span className="mt-1 block text-xs text-muted">controlled failures after redesign</span>
+          </div>
+          <div className="rounded-2xl border border-line bg-surface p-5">
+            <strong className="block font-display text-2xl text-ink">84 → 0</strong>
+            <span className="mt-1 block text-xs text-muted">project-specific lab risk</span>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-line bg-surface p-6">
@@ -102,13 +127,19 @@ export default function ProjectCaseStudyPage() {
         ))}
       </div>
 
+      {isFlagship ? (
+        <p className="mt-8 rounded-xl border border-line bg-canvas px-4 py-3 text-xs leading-relaxed text-muted">
+          Controlled lab metrics are project-specific evaluation results and are not universal production-model security ratings.
+        </p>
+      ) : null}
+
       <div className="mt-10 flex flex-wrap gap-3">
         {project.interactiveLabUrl ? (
           <a
             href={project.interactiveLabUrl}
             className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-fg transition hover:opacity-85"
           >
-            Open interactive lab
+            {isFlagship ? 'Launch flagship lab' : 'Open interactive lab'}
           </a>
         ) : null}
         <Link
