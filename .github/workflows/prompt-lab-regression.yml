@@ -5,6 +5,7 @@ on:
     paths:
       - 'labs/ai-security-adversarial-testing/**'
       - 'prompt-security-lab.*'
+      - 'adversarial-prompt-lab-ui.html'
       - 'prompt-experiments.css'
       - 'target-adapter.html'
       - 'prompt-trends.html'
@@ -22,6 +23,7 @@ on:
     paths:
       - 'labs/ai-security-adversarial-testing/**'
       - 'prompt-security-lab.*'
+      - 'adversarial-prompt-lab-ui.html'
       - 'prompt-experiments.css'
       - 'target-adapter.html'
       - 'prompt-trends.html'
@@ -196,6 +198,7 @@ jobs:
           expected_surfaces = {
               'case-study': 'case-study-ai-security-lab.html',
               'interactive-workbench': 'prompt-security-lab.html',
+              'portfolio-interactive-ui': 'adversarial-prompt-lab-ui.html',
               'authorized-target-adapter': 'target-adapter.html',
               'evaluation-trends': 'prompt-trends.html',
               'evaluation-dashboard': 'prompt-evaluation-dashboard.html',
@@ -229,7 +232,13 @@ jobs:
           assert 'Import local JSON' in dashboard
           assert '<script src="script.js"></script>' not in dashboard
 
-          print('Production provenance verified: 5 Prompt Lab surfaces + support hashes under AA-AILAB-SEC-009')
+          interactive_ui = (dist / 'adversarial-prompt-lab-ui.html').read_text(encoding='utf-8')
+          assert 'Run selected test' in interactive_ui
+          assert 'Run full suite' in interactive_ui
+          assert '12 / 12' in interactive_ui
+          assert 'AA-AILAB-SEC-009' in interactive_ui
+
+          print('Production provenance verified: 6 Prompt Lab surfaces + support hashes under AA-AILAB-SEC-009')
           PY
 
       - name: Upload prompt assessment artifacts
