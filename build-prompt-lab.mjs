@@ -1,4 +1,4 @@
-import { cp, readFile, writeFile } from 'node:fs/promises';
+import { cp, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
@@ -6,6 +6,7 @@ const out='dist';
 const projectId='AA-AILAB-SEC-009';
 const title='Adversarial Prompt Engineering Lab';
 const origin='https://ailabs.alfonzoanthony.com';
+const protectionScript='portfolio-protection.js';
 
 if(!existsSync(out)) throw new Error('dist/ does not exist. Run build.mjs first.');
 
@@ -32,6 +33,9 @@ for(const file of [...surfaces.map(item=>item.path),...supportFiles]){
   if(!existsSync(file)) throw new Error(`Prompt Lab build dependency is missing: ${file}`);
   await cp(file,`${out}/${file}`);
 }
+
+if(!existsSync(protectionScript)) throw new Error(`Portfolio protection dependency is missing: ${protectionScript}`);
+await cp(protectionScript,`${out}/${protectionScript}`);
 
 const provenanceJsonLd=(surfacePath)=>JSON.stringify({
   '@context':'https://schema.org',
@@ -80,6 +84,21 @@ if(existsSync(deployedIndex)){
   await writeFile(deployedIndex,html,'utf8');
 }
 
+// Inject the portfolio protection layer into every production HTML page after
+// all base, Agent Lab, and Prompt Lab pages have been copied into dist/.
+const deployedFiles=await readdir(out);
+for(const name of deployedFiles.filter(name=>name.endsWith('.html'))){
+  const target=`${out}/${name}`;
+  let html=await readFile(target,'utf8');
+  if(!html.includes('data-portfolio-protection')){
+    html=html.replace(
+      '</head>',
+      `<script src="${protectionScript}" defer data-portfolio-protection></script></head>`
+    );
+    await writeFile(target,html,'utf8');
+  }
+}
+
 const sha256=async(path)=>{
   if(!existsSync(path)) return null;
   const bytes=await readFile(path);
@@ -120,8 +139,16 @@ const record={
 const existingIndex=manifest.projects.findIndex(project=>project.id===projectId);
 if(existingIndex>=0) manifest.projects[existingIndex]=record;
 else manifest.projects.push(record);
+manifest.site_protection={
+  path:protectionScript,
+  sha256:await sha256(`${out}/${protectionScript}`),
+  right_click_disabled:true,
+  print_deterrence:true,
+  screenshot_shortcut_deterrence:true,
+  limitation:'Browser JavaScript can deter casual capture but cannot prevent operating-system or external-camera screenshots.'
+};
 manifest.generated_at_utc=new Date().toISOString();
 manifest.repository_commit=process.env.GITHUB_SHA||manifest.repository_commit||null;
 await writeFile(manifestPath,JSON.stringify(manifest,null,2),'utf8');
 
-console.log(`Prompt Lab deployed with ${surfaceRecords.length} provenance surfaces under ${projectId}`);
+console.log(`Prompt Lab deployed with ${surfaceRecords.length} provenance surfaces under ${projectId}; portfolio protection injected site-wide`);
