@@ -30,6 +30,7 @@ The following surfaces are part of the same Adversarial Prompt Engineering proje
 | --- | --- |
 | `case-study-ai-security-lab.html` | Employer-facing case study |
 | `prompt-security-lab.html` | Interactive 12-test Prompt Engineering workbench |
+| `adversarial-prompt-lab-ui.html` | Portfolio-focused interactive lab UI |
 | `target-adapter.html` | Authorized-target evaluation architecture |
 | `prompt-trends.html` | Persistent evaluation history and trend methodology |
 | `prompt-evaluation-dashboard.html` | Interactive target-specific Prompt Evaluation Dashboard |
