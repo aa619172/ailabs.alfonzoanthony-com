@@ -12,6 +12,7 @@ on:
       - 'prompt-evaluation-dashboard.html'
       - 'prompt-dashboard.*'
       - 'case-study-ai-security-lab.html'
+      - 'portfolio-protection.js'
       - 'build.mjs'
       - 'build-prompt-lab.mjs'
       - 'package.json'
@@ -31,6 +32,7 @@ on:
       - 'prompt-evaluation-dashboard.html'
       - 'prompt-dashboard.*'
       - 'case-study-ai-security-lab.html'
+      - 'portfolio-protection.js'
       - 'build.mjs'
       - 'build-prompt-lab.mjs'
       - 'package.json'
@@ -172,9 +174,11 @@ jobs:
           print('Prompt evaluation engine verified: releases, agent integration, 36 HTTP executions, target comparison, history, and trends')
           PY
 
-      - name: Check dashboard JavaScript syntax
+      - name: Check dashboard and protection JavaScript syntax
         working-directory: ${{ github.workspace }}
-        run: node --check prompt-dashboard.js
+        run: |
+          node --check prompt-dashboard.js
+          node --check portfolio-protection.js
 
       - name: Build production portfolio
         working-directory: ${{ github.workspace }}
@@ -182,7 +186,7 @@ jobs:
           npm ci
           npm run build
 
-      - name: Verify production Prompt Lab provenance
+      - name: Verify production Prompt Lab provenance and portfolio protection
         working-directory: ${{ github.workspace }}
         run: |
           python - <<'PY'
@@ -229,6 +233,24 @@ jobs:
               assert path.exists(), name
               assert support[name] == sha256(path)
 
+          protection = dist / 'portfolio-protection.js'
+          assert protection.exists()
+          protection_text = protection.read_text(encoding='utf-8')
+          assert "contextmenu" in protection_text
+          assert "PrintScreen" in protection_text
+          assert "beforeprint" in protection_text
+          assert manifest['site_protection']['path'] == 'portfolio-protection.js'
+          assert manifest['site_protection']['sha256'] == sha256(protection)
+          assert manifest['site_protection']['right_click_disabled'] is True
+          assert manifest['site_protection']['screenshot_shortcut_deterrence'] is True
+
+          html_pages = list(dist.glob('*.html'))
+          assert html_pages
+          for page in html_pages:
+              text = page.read_text(encoding='utf-8')
+              assert 'portfolio-protection.js' in text, page.name
+              assert 'data-portfolio-protection' in text, page.name
+
           dashboard = (dist / 'prompt-evaluation-dashboard.html').read_text(encoding='utf-8')
           assert 'SAME-STREAM VERSION COMPARISON' in dashboard
           assert 'Import local JSON' in dashboard
@@ -240,7 +262,7 @@ jobs:
           assert '12 / 12' in interactive_ui
           assert 'AA-AILAB-SEC-009' in interactive_ui
 
-          print('Production provenance verified: 6 Prompt Lab surfaces + support hashes under AA-AILAB-SEC-009')
+          print(f'Production verified: {len(html_pages)} HTML pages protected; 6 Prompt Lab surfaces provenance-hashed under AA-AILAB-SEC-009')
           PY
 
       - name: Upload prompt assessment artifacts
