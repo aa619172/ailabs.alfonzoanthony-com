@@ -77,6 +77,8 @@ if (existsSync('assets')) {
 }
 
 // Preserve legacy project screenshots currently served from the live site.
+// These are presentation assets, so a temporary remote failure must not block
+// the complete portfolio build or deployment of unrelated projects.
 const remoteAssets = {
   '2timesacharm-ad-engine.png': 'https://ailabs.alfonzoanthony.com/assets/2timesacharm-ad-engine.png',
   'ai-video-engine.png': 'https://ailabs.alfonzoanthony.com/assets/ai-video-engine.png',
@@ -86,17 +88,37 @@ const remoteAssets = {
 };
 
 for (const [name, url] of Object.entries(remoteAssets)) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Could not download ${url}: ${response.status}`);
-  const bytes = new Uint8Array(await response.arrayBuffer());
-  await writeFile(`${out}/assets/${name}`, bytes);
+  const target = `${out}/assets/${name}`;
+  if (existsSync(target)) continue;
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; Alfonzo-AI-Labs-Build/1.0)',
+        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      }
+    });
+    if (!response.ok) {
+      console.warn(`Legacy preview unavailable (${response.status}): ${url}`);
+      continue;
+    }
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    await writeFile(target, bytes);
+  } catch (error) {
+    console.warn(`Legacy preview download skipped: ${url} (${error?.message || error})`);
+  }
 }
 
 const resumeUrl = 'https://ailabs.alfonzoanthony.com/Alfonzo_Anthony_AI_Prompt_Engineer_Resume_Public.pdf';
-const resumeResponse = await fetch(resumeUrl);
-if (resumeResponse.ok) {
-  const bytes = new Uint8Array(await resumeResponse.arrayBuffer());
-  await writeFile(`${out}/Alfonzo_Anthony_AI_Prompt_Engineer_Resume_Public.pdf`, bytes);
+try {
+  const resumeResponse = await fetch(resumeUrl);
+  if (resumeResponse.ok) {
+    const bytes = new Uint8Array(await resumeResponse.arrayBuffer());
+    await writeFile(`${out}/Alfonzo_Anthony_AI_Prompt_Engineer_Resume_Public.pdf`, bytes);
+  } else {
+    console.warn(`Resume download skipped (${resumeResponse.status}): ${resumeUrl}`);
+  }
+} catch (error) {
+  console.warn(`Resume download skipped: ${error?.message || error}`);
 }
 
 const sha256 = async (path) => {
