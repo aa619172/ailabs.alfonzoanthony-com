@@ -103,9 +103,17 @@ export default function ProjectCaseStudyPage() {
       </div>
 
       <div className="mt-10 flex flex-wrap gap-3">
+        {project.interactiveLabUrl ? (
+          <a
+            href={project.interactiveLabUrl}
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-fg transition hover:opacity-85"
+          >
+            Open interactive lab
+          </a>
+        ) : null}
         <Link
           to="/contact"
-          className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-fg transition hover:opacity-85"
+          className="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-border-hover"
         >
           Discuss this project
         </Link>

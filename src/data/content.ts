@@ -27,6 +27,8 @@ export type CaseStudy = {
   /** Extra screenshots (e.g. live test proof) */
   galleryImages?: readonly string[]
   repoUrl?: string
+  /** Standalone interactive demo (served from public/) */
+  interactiveLabUrl?: string
   highlight?: string
   period?: string
   org?: string
@@ -118,6 +120,7 @@ export const caseStudies: readonly CaseStudy[] = [
       'Python',
     ],
     previewImage: '/projects/adversarial-prompt-lab.svg',
+    interactiveLabUrl: '/adversarial-prompt-lab-ui.html',
     repoUrl:
       'https://github.com/aa619172/ailabs.alfonzoanthony-com/tree/main/labs/ai-security-adversarial-testing',
     highlight: '12/12 V1 failures → 0/12 V2 · controlled lab result',
