@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { askResponses, homeQuickLinks, intro, site } from '../data/content'
+import { askResponses, caseStudies, homeQuickLinks, intro, site } from '../data/content'
 import { Avatar } from '../components/aivor/AivorShell'
 import { IconAbout, IconBot, IconClock, IconPlus, IconResume, IconSpark } from '../components/aivor/icons'
 
@@ -12,9 +12,12 @@ const pillIcons = {
   about: IconAbout,
 } as const
 
+const FLAGSHIP_ID = 'adversarial-prompt-lab'
+
 export default function HomePage() {
   const [query, setQuery] = useState('')
   const [response, setResponse] = useState<string | null>(null)
+  const flagship = caseStudies.find((project) => project.id === FLAGSHIP_ID)
 
   function handleAsk(event: React.FormEvent) {
     event.preventDefault()
@@ -90,6 +93,54 @@ export default function HomePage() {
           )
         })}
       </div>
+
+      {flagship ? (
+        <section className="mt-8 w-full rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)]">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="rounded-full border border-line bg-canvas px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+              Flagship project
+            </span>
+            <span className="text-xs text-muted">Controlled Prompt Engineering evaluation</span>
+          </div>
+
+          <h2 className="mt-4 font-display text-2xl leading-tight text-ink">
+            {flagship.title}
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{flagship.description}</p>
+
+          <div className="mt-5 grid gap-2 sm:grid-cols-3">
+            <div className="rounded-xl border border-line bg-canvas p-3">
+              <strong className="block text-lg text-ink">12</strong>
+              <span className="text-[11px] text-muted">controlled tests</span>
+            </div>
+            <div className="rounded-xl border border-line bg-canvas p-3">
+              <strong className="block text-lg text-ink">12 → 0</strong>
+              <span className="text-[11px] text-muted">controlled failures</span>
+            </div>
+            <div className="rounded-xl border border-line bg-canvas p-3">
+              <strong className="block text-lg text-ink">84 → 0</strong>
+              <span className="text-[11px] text-muted">project lab risk</span>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link
+              to={`/projects/${flagship.id}`}
+              className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-fg transition hover:opacity-85"
+            >
+              Read flagship case study
+            </Link>
+            {flagship.interactiveLabUrl ? (
+              <a
+                href={flagship.interactiveLabUrl}
+                className="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink transition hover:border-border-hover"
+              >
+                Open interactive lab
+              </a>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
 
       <p className="mt-12 text-center text-xs text-muted/80">
         {site.name} · {site.role}
